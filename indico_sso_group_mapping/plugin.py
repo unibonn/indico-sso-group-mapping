@@ -40,5 +40,5 @@ class SSOGroupMappingPlugin(IndicoPlugin):
         group = self.settings.get('sso_group')
         if not group:
             return
-        if identity.provider == 'shib-sso' and identity.identifier.endswith('@uni-bonn.de'):
+        if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
             group.members.add(user)
