@@ -16,7 +16,7 @@ class SettingsForm(IndicoForm):
 
 
 class SSOGroupMappingPlugin(IndicoPlugin):
-    """SSOGroupMapping
+    """SSO Group Mapping
 
     Provides SSO group mapping to local group for Indico
     """
