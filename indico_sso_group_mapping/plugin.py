@@ -13,6 +13,8 @@ class SettingsForm(IndicoForm):
     sso_group = QuerySelectField('Local Users Group', allow_blank=True,
                                  query_factory=lambda: LocalGroup.query, get_label='name',
                                  description='The group to which anyone logging in with a matching SSO account is added.')
+    #enable_group_cleanup = BooleanField(_('Enable periodic Local Users Group cleanup'), widget=SwitchWidget(),
+    #                                  description=_('Enable periodic cleanup of Local Users Group for SSO accounts without login in the past year.'))
 
 
 class SSOGroupMappingPlugin(IndicoPlugin):
@@ -25,6 +27,7 @@ class SSOGroupMappingPlugin(IndicoPlugin):
     settings_form = SettingsForm
     default_settings = {
         'sso_group': None,
+    #    'enable_group_cleanup': False,
     }
     settings_converters = {
         'sso_group': ModelConverter(LocalGroup),
