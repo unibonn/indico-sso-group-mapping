@@ -63,4 +63,5 @@ class SSOGroupMappingPlugin(IndicoPlugin):
         if not group:
             return
         if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
+            #self.logger.info(f"Adding user with identity {identity.identifier} to local group {group}")
             group.members.add(user)
