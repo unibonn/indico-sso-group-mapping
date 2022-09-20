@@ -1,5 +1,9 @@
 # SPDX-License-Identifier: MIT
 
+#from celery.schedules import crontab
+
+#from indico.core.celery import celery
+
 #from from wtforms.fields import SelectField
 from wtforms_sqlalchemy.fields import QuerySelectField
 
@@ -10,6 +14,11 @@ from indico.core.settings.converters import ModelConverter
 from indico.modules.groups.models.groups import LocalGroup
 from indico.web.forms.base import IndicoForm
 
+#@celery.periodic_task(run_every=crontab(minute='*/5'), plugin='sso_group_mapping')
+#def scheduled_groupmembers_check():
+#    if not SSOGroupMappingPlugin.settings.get('enable_group_cleanup'):
+#        SSOGroupMappingPlugin.logger.warning('Local Group cleanup not enabled, skipping run')
+#        return
 
 class SettingsForm(IndicoForm):
     #identity_provider = SelectField(_('Provider'))
@@ -39,7 +48,7 @@ class SSOGroupMappingPlugin(IndicoPlugin):
     ##identity_providers = [p for p in multipass.identity_providers.values()]
     #identity_providers = multipass.identity_providers.values()
     #if not identity_providers
-    #  del settings_form.identity_provider
+    #    del settings_form.identity_provider
     #idp_choices = [(p.name, p.title) for p in sorted(identity_providers, key=attrgetter('title'))]
     #settings_form.identity_provider.choices = idp_choices
 
