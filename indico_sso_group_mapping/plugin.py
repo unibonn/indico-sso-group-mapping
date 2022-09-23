@@ -14,7 +14,9 @@ from indico.core import signals
 from indico.core.plugins import IndicoPlugin
 from indico.core.settings.converters import ModelConverter
 from indico.modules.groups.models.groups import LocalGroup
+
 from indico.web.forms.base import IndicoForm
+from indico.web.forms.widgets import SwitchWidget
 
 #@celery.periodic_task(run_every=crontab(minute='*/5'), plugin='sso_group_mapping')
 #def scheduled_groupmembers_check():
