@@ -2,6 +2,8 @@
 
 #from datetime import datetime
 
+from indico_sso_group_mapping import _
+
 #from celery.schedules import crontab
 
 #from indico.core.celery import celery
@@ -37,11 +39,11 @@ from indico.web.forms.widgets import SwitchWidget
 
 class SettingsForm(IndicoForm):
     #identity_provider = SelectField(_('Provider'))
-    sso_group = QuerySelectField('Local Users Group', allow_blank=True,
+    sso_group = QuerySelectField(_('Local Users Group'), allow_blank=True,
                                  query_factory=lambda: LocalGroup.query, get_label='name',
-                                 description='The group to which anyone logging in with a matching SSO account is added.')
-    enable_group_cleanup = BooleanField('Enable periodic Local Users Group cleanup', widget=SwitchWidget(),
-                                        description='Enable periodic cleanup of Local Users Group for SSO accounts without login in the past year.')
+                                 description=_('The group to which anyone logging in with a matching SSO account is added.'))
+    enable_group_cleanup = BooleanField(_('Enable periodic Local Users Group cleanup'), widget=SwitchWidget(),
+                                        description=_('Enable periodic cleanup of Local Users Group for SSO accounts without login in the past year.'))
 
 
 class SSOGroupMappingPlugin(IndicoPlugin):
