@@ -38,7 +38,7 @@ from indico.web.forms.widgets import SwitchWidget
 
 
 class SettingsForm(IndicoForm):
-    identity_provider = SelectField(_('Provider'))
+    #identity_provider = SelectField(_('Provider'))
     sso_group = QuerySelectField(_('Local Users Group'), allow_blank=True,
                                  query_factory=lambda: LocalGroup.query, get_label='name',
                                  description=_('The group to which anyone logging in with a matching SSO account is added.'))
@@ -64,10 +64,10 @@ class SSOGroupMappingPlugin(IndicoPlugin):
 
     #identity_providers = [p for p in multipass.identity_providers.values()]
     identity_providers = multipass.identity_providers.values()
-    if not identity_providers:
-        del settings_form.identity_provider
-    idp_choices = [(p.name, p.title) for p in sorted(identity_providers, key=attrgetter('title'))]
-    settings_form.identity_provider.choices = idp_choices
+    #if not identity_providers:
+    #    del settings_form.identity_provider
+    #idp_choices = [(p.name, p.title) for p in sorted(identity_providers, key=attrgetter('title'))]
+    #settings_form.identity_provider.choices = idp_choices
 
     def init(self):
         super().init()
