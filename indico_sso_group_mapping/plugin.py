@@ -78,8 +78,8 @@ class SSOGroupMappingPlugin(IndicoPlugin):
             return
         group = self.settings.get('sso_group')
         if not group:
-            #self.logger.warning('Local Users Group not set, plugin ineffective')
+            self.logger.warning('Local Users Group not set, plugin ineffective')
             return
         if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
-            #self.logger.info(f"Adding user with identity {identity.identifier} to local group {group}")
+            self.logger.info(f"Adding user with identity {identity.identifier} to local group {group}")
             group.members.add(user)
