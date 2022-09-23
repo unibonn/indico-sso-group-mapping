@@ -6,7 +6,7 @@
 
 #from indico.core.celery import celery
 
-from from wtforms import BooleanField, SelectField
+from wtforms import BooleanField, SelectField
 from wtforms_sqlalchemy.fields import QuerySelectField
 
 from indico.core import signals
