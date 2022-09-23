@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 #from datetime import datetime
+from operator import attrgetter
 
 from indico_sso_group_mapping import _
 
@@ -66,7 +67,7 @@ class SSOGroupMappingPlugin(IndicoPlugin):
     identity_providers = multipass.identity_providers.values()
     #if not identity_providers:
     #    del settings_form.identity_provider
-    #idp_choices = [(p.name, p.title) for p in sorted(identity_providers, key=attrgetter('title'))]
+    idp_choices = [(p.name, p.title) for p in sorted(identity_providers, key=attrgetter('title'))]
     #settings_form.identity_provider.choices = idp_choices
 
     def init(self):
