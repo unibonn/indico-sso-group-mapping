@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: MIT
 
-#from datetime import datetime
+from datetime import datetime
 from operator import attrgetter
 
 from indico_sso_group_mapping import _
 
-#from celery.schedules import crontab
+from celery.schedules import crontab
 
-#from indico.core.celery import celery
+from indico.core.celery import celery
 
 from wtforms.fields import BooleanField, SelectField
 from wtforms_sqlalchemy.fields import QuerySelectField
@@ -21,15 +21,15 @@ from indico.modules.groups.models.groups import LocalGroup
 from indico.web.forms.base import IndicoForm
 from indico.web.forms.widgets import SwitchWidget
 
-#@celery.periodic_task(run_every=crontab(minute='*/5'), plugin='sso_group_mapping')
-#def scheduled_groupmembers_check():
-#    if not SSOGroupMappingPlugin.settings.get('enable_group_cleanup'):
-#        SSOGroupMappingPlugin.logger.warning('Local Group cleanup not enabled, skipping run')
-#        return
-#    group = self.settings.get('sso_group')
-#    if not group:
-#        SSOGroupMappingPlugin.logger.warning('Local Users Group not set, not cleaning up group')
-#        return
+@celery.periodic_task(run_every=crontab(minute='*/5'), plugin='sso_group_mapping')
+def scheduled_groupmembers_check():
+    if not SSOGroupMappingPlugin.settings.get('enable_group_cleanup'):
+        SSOGroupMappingPlugin.logger.warning('Local Group cleanup not enabled, skipping run')
+        return
+    group = SSOGroupMappingPlugin.settings.get('sso_group')
+    if not group:
+        SSOGroupMappingPlugin.logger.warning('Local Users Group not set, not cleaning up group')
+        return
 #    for user in group.members:
 #        for identity in user.identities:
 #            if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
