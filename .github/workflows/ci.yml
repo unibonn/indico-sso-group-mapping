@@ -3,12 +3,14 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - main
       - '*.x'
+      - ci
   pull_request:
     branches:
-      - master
+      - main
       - '*.x'
+      - ci
 
 jobs:
   setup:
