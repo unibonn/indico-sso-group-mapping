@@ -161,10 +161,10 @@ jobs:
           - 5432
         options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
 
-    strategy:
-      matrix:
-        include:
-          - plugin: indico_sso_group_mapping
+    #strategy:
+    #  matrix:
+    #    include:
+    #      - plugin: indico_sso_group_mapping
 
     steps:
       - uses: actions/checkout@v2
@@ -193,14 +193,15 @@ jobs:
           echo "VIRTUAL_ENV=$(pwd)/.venv" >> $GITHUB_ENV
           echo "$(pwd)/.venv/bin" >> $GITHUB_PATH
 
-      - name: Install extra dependencies
-        if: matrix.plugin == 'citadel'
-        run: |
-          pip install -e "${GITHUB_WORKSPACE}/livesync/"
+      #- name: Install extra dependencies
+      #  if: matrix.plugin == 'citadel'
+      #  run: |
+      #    pip install -e "${GITHUB_WORKSPACE}/livesync/"
 
       - name: Install plugin
         run: |
-          cd "${GITHUB_WORKSPACE}/${{ matrix.plugin }}"
+          #cd "${GITHUB_WORKSPACE}/${{ matrix.plugin }}"
+          cd "${GITHUB_WORKSPACE}"
           pip install -e .
 
       - name: Install redis
@@ -219,5 +220,6 @@ jobs:
       - name: Run tests
         run: |
           export INDICO_TEST_DATABASE_URI="postgresql://indicotest@localhost:${{ job.services.postgres.ports[5432] }}/indicotest"
-          cd "${GITHUB_WORKSPACE}/${{ matrix.plugin }}"
+          #cd "${GITHUB_WORKSPACE}/${{ matrix.plugin }}"
+          cd "${GITHUB_WORKSPACE}"
           pytest --color=yes
