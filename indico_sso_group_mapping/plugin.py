@@ -3,23 +3,21 @@
 # from datetime import datetime
 from operator import attrgetter
 
-from indico_sso_group_mapping import _
-
 from celery.schedules import crontab
-
-from indico.core.celery import celery
 
 from wtforms.fields import BooleanField, SelectField
 from wtforms_sqlalchemy.fields import QuerySelectField
 
 from indico.core import signals
 from indico.core.auth import multipass
+from indico.core.celery import celery
 from indico.core.plugins import IndicoPlugin
 from indico.core.settings.converters import ModelConverter
 from indico.modules.groups.models.groups import LocalGroup
-
 from indico.web.forms.base import IndicoForm
 from indico.web.forms.widgets import SwitchWidget
+
+from indico_sso_group_mapping import _
 
 
 @celery.periodic_task(run_every=crontab(minute='*/5'), plugin='sso_group_mapping')
