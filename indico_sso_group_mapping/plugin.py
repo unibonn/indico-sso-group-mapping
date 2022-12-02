@@ -67,9 +67,9 @@ class SSOGroupMappingPlugin(IndicoPlugin):
         #identity_providers = [p for p in multipass.identity_providers.values()]
         identity_providers = multipass.identity_providers.values()
         if not identity_providers:
-            del settings_form.identity_provider
+            del self.settings_form.identity_provider
         idp_choices = [(p.name, p.title) for p in sorted(identity_providers, key=attrgetter('title'))]
-        settings_form.identity_provider.choices = idp_choices
+        self.settings_form.identity_provider.choices = idp_choices
 
         super().init()
         self.connect(signals.users.logged_in, self._user_logged_in)
