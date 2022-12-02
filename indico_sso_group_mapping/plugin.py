@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 
-from datetime import datetime
+# from datetime import datetime
 from operator import attrgetter
 
 from indico_sso_group_mapping import _
@@ -20,6 +20,7 @@ from indico.modules.groups.models.groups import LocalGroup
 
 from indico.web.forms.base import IndicoForm
 from indico.web.forms.widgets import SwitchWidget
+
 
 @celery.periodic_task(run_every=crontab(minute='*/5'), plugin='sso_group_mapping')
 def scheduled_groupmembers_check():
@@ -64,7 +65,7 @@ class SSOGroupMappingPlugin(IndicoPlugin):
     }
 
     def init(self):
-        #identity_providers = [p for p in multipass.identity_providers.values()]
+        # identity_providers = [p for p in multipass.identity_providers.values()]
         identity_providers = multipass.identity_providers.values()
         if not identity_providers:
             del self.settings_form.identity_provider
