@@ -4,7 +4,6 @@
 from operator import attrgetter
 
 from celery.schedules import crontab
-
 from wtforms.fields import BooleanField, SelectField
 from wtforms_sqlalchemy.fields import QuerySelectField
 
@@ -34,16 +33,19 @@ def scheduled_groupmembers_check():
 #            if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
 #                last_login_dt = identity.safe_last_login_dt
 #                login_ago = datetime.now() - last_login_dt
-#                SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} has last logged in {login_ago.days} days ago")
+#                SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "\
+#                                                      "has last logged in {login_ago.days} days ago")
 
 
 class SettingsForm(IndicoForm):
     identity_provider = SelectField(_('Provider'))
     sso_group = QuerySelectField(_('Local Users Group'), allow_blank=True,
                                  query_factory=lambda: LocalGroup.query, get_label='name',
-                                 description=_('The group to which anyone logging in with a matching SSO account is added.'))
+                                 description=_('The group to which anyone logging in '\
+                                               'with a matching SSO account is added.'))
     enable_group_cleanup = BooleanField(_('Enable periodic Local Users Group cleanup'), widget=SwitchWidget(),
-                                        description=_('Enable periodic cleanup of Local Users Group for SSO accounts without login in the past year.'))
+                                        description=_('Enable periodic cleanup of Local Users Group '\
+                                                      'for SSO accounts without login in the past year.'))
 
 
 class SSOGroupMappingPlugin(IndicoPlugin):
