@@ -6,7 +6,8 @@ from indico.core.plugins import plugin_engine
 from indico_sso_group_mapping.plugin import SSOGroupMappingPlugin
 
 #from indico.modules.auth.models.identities import Identity
-from indico.modules.auth.util import save_identity_info
+from indico.modules.auth import Identity
+#from indico.modules.auth.util import save_identity_info
 
 from flask_multipass import IdentityInfo
 
