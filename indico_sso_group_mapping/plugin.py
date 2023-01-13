@@ -28,13 +28,13 @@ def scheduled_groupmembers_check():
     if not group:
         SSOGroupMappingPlugin.logger.warning('Local Users Group not set, not cleaning up group')
         return
-#    for user in group.members:
-#        for identity in user.identities:
-#            if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
-#                last_login_dt = identity.safe_last_login_dt
-#                login_ago = datetime.now() - last_login_dt
-#                SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "\
-#                                                      "has last logged in {login_ago.days} days ago")
+    for user in group.members:
+        for identity in user.identities:
+            if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
+                last_login_dt = identity.safe_last_login_dt
+                login_ago = datetime.now() - last_login_dt
+                SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "\
+                                                      "has last logged in {login_ago.days} days ago")
 
 
 class SettingsForm(IndicoForm):
