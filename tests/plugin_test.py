@@ -51,20 +51,29 @@ def app(request, redis_proc):
     }
     return make_app(testing=True, config_override=config_override)
 
-def test_sso_group_mapping_plugin(app):
-    my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    assert my_plugin.configurable is True
+@pytest.fixture
+def create_group(db):
+    """Return a callable which lets you create dummy groups."""
+    def _create_group(id_, group_name):
+        group = LocalGroup()
+        group.id = id_
+        group.name = group_name
+        db.session.add(group)
+        db.session.flush()
+        return group.proxy
 
-def test_create_sso_user(app, create_user, db):
+    return _create_group
+
+def test_create_sso_group_mapping_plugin(app):
+    my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    assert(my_plugin.configurable is True)
+
+def test_login_sso_user(app, create_user, db):
     #FIXME: Need to import multipass from Indico!
     #identity_providers = multipass.identity_providers.values()
     # From this, get the active provider and pass it into IdentityInfo!
 
-    group = LocalGroup()
-    group.id = 1
-    group.name = 'uni-bonn-users'
-    db.session.add(group)
-    db.session.flush()
+    group = create_group(1, 'uni-bonn-users')
 
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     my_plugin.settings.set('sso_group', group)
