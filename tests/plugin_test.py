@@ -41,6 +41,9 @@ def app(request, redis_proc):
 	    'title':            'Uni-ID',
             'identifier_field': 'eppn',
           },
+        },
+        'PROVIDER_MAP': {
+          'uni-bonn-sso': 'uni-bonn-sso',
         }
         #FIXME: Add identity provider config!!!
     }
