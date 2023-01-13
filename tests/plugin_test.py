@@ -4,6 +4,7 @@ import pytest
 from indico.core import signals
 from indico.core.plugins import plugin_engine
 from indico_sso_group_mapping.plugin import SSOGroupMappingPlugin
+from indico.modules.groups.models.groups import LocalGroup
 
 #from indico.modules.auth.models.identities import Identity
 from indico.modules.auth import Identity
@@ -54,13 +55,16 @@ def test_sso_group_mapping_plugin(app):
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     assert my_plugin.configurable is True
 
-def test_create_sso_user(app, create_user, create_group):
+def test_create_sso_user(app, create_user, db):
     #FIXME: Need to import multipass from Indico!
     #identity_providers = multipass.identity_providers.values()
     # From this, get the active provider and pass it into IdentityInfo!
 
-    group = create_group(1)
+    group = LocalGroup()
+    group.id = 1
     group.name = 'uni-bonn-users'
+    db.session.add(group)
+    db.session.flush()
 
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     my_plugin.settings.set('sso_group', group)
