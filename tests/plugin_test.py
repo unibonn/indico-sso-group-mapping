@@ -77,7 +77,7 @@ def test_login_sso_user(app, create_group, create_user, db):
     group = create_group(1, 'uni-bonn-users')
 
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    my_plugin.settings.set('sso_group', group)
+    my_plugin.settings.set('sso_group', group.group)
 
     user = create_user(1, email='foobar@uni-bonn.de')
     identity = Identity(user_id=1, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
@@ -97,7 +97,7 @@ def test_local_sso_user(app, create_group, create_user, db):
     group = create_group(1, 'uni-bonn-users')
 
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    my_plugin.settings.set('sso_group', group)
+    my_plugin.settings.set('sso_group', group.group)
 
     user = create_user(1, email='foobar@cern.ch')
     identity = Identity(user_id=1, provider=local_provider, identifier='foobar@cern.ch')
