@@ -69,7 +69,7 @@ def test_create_sso_group_mapping_plugin(app):
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     assert(my_plugin.configurable is True)
 
-def test_login_sso_user(app, create_user, db):
+def test_login_sso_user(app, create_group, create_user, db):
     #FIXME: Need to import multipass from Indico!
     #identity_providers = multipass.identity_providers.values()
     # From this, get the active provider and pass it into IdentityInfo!
@@ -91,7 +91,7 @@ def test_login_sso_user(app, create_user, db):
     #identity_info = IdentityInfo('uni-bonn-sso', identifier='foobar@uni-bonn.de')
     #save_identity_info(identity_info, user)
 
-def test_local_sso_user(app, create_user, db):
+def test_local_sso_user(app, create_group, create_user, db):
     local_provider = multipass.default_local_auth_provider
 
     group = create_group(1, 'uni-bonn-users')
