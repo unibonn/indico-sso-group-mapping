@@ -29,16 +29,16 @@ def app(request, redis_proc):
         'SMTP_USE_CELERY': False,
         'AUTH_PROVIDERS': {
           'uni-bonn-sso': {
-	    'type':             'shibboleth',
+            'type':             'shibboleth',
             'title':            'Uni-ID',
             'attrs_prefix':     '',
             'callback_uri':     '/shibboleth',
           },
         },
-        'IDENTITIY_PROVIDERS': {
+        'IDENTITY_PROVIDERS': {
           'uni-bonn-sso': {
-	    'type':             'shibboleth',
-	    'title':            'Uni-ID',
+            'type':             'shibboleth',
+            'title':            'Uni-ID',
             'identifier_field': 'eppn',
           },
         },
