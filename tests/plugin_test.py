@@ -72,11 +72,11 @@ def test_create_sso_user(app, create_user, db):
     user = create_user(1, email='foobar@uni-bonn.de')
     identity = Identity(user_id=1, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
 
-    assert('uni-bonn-users' not in user.local_groups)
+    assert(user not in group.members)
 
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
-    assert('uni-bonn-users' in user.local_groups)
+    assert(user in group.members)
 
     #identity_info = IdentityInfo('uni-bonn-sso', identifier='foobar@uni-bonn.de')
     #save_identity_info(identity_info, user)
