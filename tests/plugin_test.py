@@ -59,8 +59,8 @@ def test_create_sso_user(create_user):
     #identity_providers = multipass.identity_providers.values()
     # From this, get the active provider and pass it into IdentityInfo!
 
-    identity = Identity(provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
+    user = create_user(1, email='foobar@uni-bonn.de')
+    identity = Identity(user_id=1, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
 
-    user = create_user(1, email='foobar@uni-bonn.de', identity=identity)
     #identity_info = IdentityInfo('uni-bonn-sso', identifier='foobar@uni-bonn.de')
     #save_identity_info(identity_info, user)
