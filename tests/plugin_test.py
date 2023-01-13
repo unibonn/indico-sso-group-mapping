@@ -1,3 +1,4 @@
+import os
 import pytest
 
 from indico.core.plugins import plugin_engine
