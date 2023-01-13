@@ -1,4 +1,4 @@
-# import pytest
+import pytest
 
 from indico.core.plugins import plugin_engine
 
@@ -26,6 +26,21 @@ def app(request, redis_proc):
         'ENABLE_ROOMBOOKING': True,
         'SECRET_KEY': os.urandom(16),
         'SMTP_USE_CELERY': False,
+        'AUTH_PROVIDERS': {
+          'uni-bonn-sso': {
+	    'type':             'shibboleth',
+            'title':            'Uni-ID',
+            'attrs_prefix':     '',
+            'callback_uri':     '/shibboleth',
+          },
+        },
+        'IDENTITIY_PROVIDERS': {
+          'uni-bonn-sso': {
+	    'type':             'shibboleth',
+	    'title':            'Uni-ID',
+            'identifier_field': 'eppn',
+          },
+        }
         #FIXME: Add identity provider config!!!
     }
     return make_app(testing=True, config_override=config_override)
