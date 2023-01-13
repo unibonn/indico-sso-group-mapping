@@ -43,7 +43,7 @@ def app(request, redis_proc):
           },
         },
         'PROVIDER_MAP': {
-          'uni-bonn-sso': 'uni-bonn-sso',
+          'uni-bonn-sso': { 'identity_provider': 'uni-bonn-sso', },
         }
         #FIXME: Add identity provider config!!!
     }
