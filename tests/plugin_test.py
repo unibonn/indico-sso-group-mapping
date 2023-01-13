@@ -2,6 +2,7 @@ import os
 import pytest
 
 from indico.core import signals
+from indico.core.auth import multipass
 from indico.core.plugins import plugin_engine
 from indico_sso_group_mapping.plugin import SSOGroupMappingPlugin
 from indico.modules.groups.models.groups import LocalGroup
@@ -89,3 +90,20 @@ def test_login_sso_user(app, create_user, db):
 
     #identity_info = IdentityInfo('uni-bonn-sso', identifier='foobar@uni-bonn.de')
     #save_identity_info(identity_info, user)
+
+def test_local_sso_user(app, create_user, db):
+    local_provider = multipass.default_local_auth_provider
+
+    group = create_group(1, 'uni-bonn-users')
+
+    my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    my_plugin.settings.set('sso_group', group)
+
+    user = create_user(1, email='foobar@cern.ch')
+    identity = Identity(user_id=1, provider=local_provider, identifier='foobar@cern.ch')
+
+    assert(user not in group.members)
+
+    signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
+
+    assert(user not in group.members)
