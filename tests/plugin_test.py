@@ -59,13 +59,14 @@ def test_create_sso_user(app, create_user, create_group):
     #identity_providers = multipass.identity_providers.values()
     # From this, get the active provider and pass it into IdentityInfo!
 
+    group = create_group(1)
+    group.name = 'uni-bonn-users'
+
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    my_plugin.settings.set('sso_group', 'uni-bonn-users')
+    my_plugin.settings.set('sso_group', group)
 
     user = create_user(1, email='foobar@uni-bonn.de')
     identity = Identity(user_id=1, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
-    group = create_group(1)
-    group.name = 'uni-bonn-users'
 
     assert('uni-bonn-users' not in user.local_groups)
 
