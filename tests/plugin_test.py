@@ -82,11 +82,11 @@ def test_login_sso_user(app, create_group, create_user, db):
     user = create_user(1, email='foobar@uni-bonn.de')
     identity = Identity(user_id=1, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
 
-    assert(user not in group.get_members)
+    assert(user not in group.get_members())
 
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
-    assert(user in group.get_members)
+    assert(user in group.get_members())
 
     #identity_info = IdentityInfo('uni-bonn-sso', identifier='foobar@uni-bonn.de')
     #save_identity_info(identity_info, user)
@@ -102,8 +102,8 @@ def test_local_sso_user(app, create_group, create_user, db):
     user = create_user(1, email='foobar@cern.ch')
     identity = Identity(user_id=1, provider=local_provider, identifier='foobar@cern.ch')
 
-    assert(user not in group.get_members)
+    assert(user not in group.get_members())
 
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
-    assert(user not in group.get_members)
+    assert(user not in group.get_members())
