@@ -4,7 +4,7 @@ import pytest
 from indico.core import signals
 from indico.core.auth import multipass
 from indico.core.plugins import plugin_engine
-from indico_sso_group_mapping.plugin import SSOGroupMappingPlugin
+from indico_sso_group_mapping.plugin import scheduled_groupmembers_check, SSOGroupMappingPlugin
 from indico.modules.groups.models.groups import LocalGroup
 
 #from indico.modules.auth.models.identities import Identity
@@ -107,3 +107,16 @@ def test_local_sso_user(app, create_group, create_user, db):
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
     assert(user not in group.get_members())
+
+def test_group_cleanup(app, create_group, create_user, db):
+    group = create_group(1, 'uni-bonn-users')
+
+    my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    my_plugin.settings.set('sso_group', group.group)
+
+    user = create_user(1, email='foobar@uni-bonn.de')
+    identity = Identity(user_id=1, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
+
+    signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
+
+    scheduled_groupmembers_check()
