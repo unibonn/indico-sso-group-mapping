@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 
-# from datetime import datetime
+from datetime import datetime
 from operator import attrgetter
 
 from celery.schedules import crontab
@@ -33,10 +33,11 @@ def scheduled_groupmembers_check():
             if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
                 last_login_dt = identity.safe_last_login_dt
                 login_ago = datetime.now() - last_login_dt
-                SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "\
-                                                      "has last logged in {login_ago.days} days ago")
+                SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "
+                                                     "has last logged in {login_ago.days} days ago")
                 if login_ago.days > 365:
-                    self.logger.info(f"Removing user with identity {identity.identifier} from local group {group}")
+                    SSOGroupMappingPlugin.logger.info(f"Removing user with identity {identity.identifier} "
+                                                      "from local group {group}")
                     group.members.remove(user)
 
 

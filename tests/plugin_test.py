@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import pytest
 
@@ -7,13 +8,14 @@ from indico.core.plugins import plugin_engine
 from indico_sso_group_mapping.plugin import scheduled_groupmembers_check, SSOGroupMappingPlugin
 from indico.modules.groups.models.groups import LocalGroup
 
-#from indico.modules.auth.models.identities import Identity
+# from indico.modules.auth.models.identities import Identity
 from indico.modules.auth import Identity
-#from indico.modules.auth.util import save_identity_info
+# from indico.modules.auth.util import save_identity_info
 
-from flask_multipass import IdentityInfo
+# from flask_multipass import IdentityInfo
 
 from indico.web.flask.app import make_app
+
 
 # Override app fixture imported from Indico pytest plugin:
 @pytest.fixture(scope='session')
@@ -31,26 +33,27 @@ def app(request, redis_proc):
         'SECRET_KEY': os.urandom(16),
         'SMTP_USE_CELERY': False,
         'AUTH_PROVIDERS': {
-          'uni-bonn-sso': {
-            'type':             'shibboleth',
-            'title':            'Uni-ID',
-            'attrs_prefix':     '',
-            'callback_uri':     '/shibboleth',
-          },
+            'uni-bonn-sso': {
+                'type':             'shibboleth',
+                'title':            'Uni-ID',
+                'attrs_prefix':     '',
+                'callback_uri':     '/shibboleth',
+            },
         },
         'IDENTITY_PROVIDERS': {
-          'uni-bonn-sso': {
-            'type':             'shibboleth',
-            'title':            'Uni-ID',
-            'identifier_field': 'eppn',
-          },
+            'uni-bonn-sso': {
+                'type':             'shibboleth',
+                'title':            'Uni-ID',
+                'identifier_field': 'eppn',
+            },
         },
         'PROVIDER_MAP': {
-          'uni-bonn-sso': { 'identity_provider': 'uni-bonn-sso', },
+            'uni-bonn-sso': { 'identity_provider': 'uni-bonn-sso', },
         }
         #FIXME: Add identity provider config!!!
     }
     return make_app(testing=True, config_override=config_override)
+
 
 @pytest.fixture
 def create_group(db):
@@ -65,14 +68,16 @@ def create_group(db):
 
     return _create_group
 
+
 def test_create_sso_group_mapping_plugin(app):
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     assert(my_plugin.configurable is True)
 
+
 def test_login_sso_user(app, create_group, create_user, db):
     #FIXME: Need to import multipass from Indico!
-    #identity_providers = multipass.identity_providers.values()
-    # From this, get the active provider and pass it into IdentityInfo!
+    # identity_providers = multipass.identity_providers.values()
+    #  From this, get the active provider and pass it into IdentityInfo!
 
     group = create_group(1, 'uni-bonn-users')
 
@@ -88,8 +93,9 @@ def test_login_sso_user(app, create_group, create_user, db):
 
     assert(user in group.get_members())
 
-    #identity_info = IdentityInfo('uni-bonn-sso', identifier='foobar@uni-bonn.de')
-    #save_identity_info(identity_info, user)
+    # identity_info = IdentityInfo('uni-bonn-sso', identifier='foobar@uni-bonn.de')
+    # save_identity_info(identity_info, user)
+
 
 def test_local_sso_user(app, create_group, create_user, db):
     local_provider = multipass.default_local_auth_provider
@@ -107,6 +113,7 @@ def test_local_sso_user(app, create_group, create_user, db):
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
     assert(user not in group.get_members())
+
 
 def test_group_cleanup(app, create_group, create_user, db):
     group = create_group(1, 'uni-bonn-users')
