@@ -127,6 +127,8 @@ def test_group_cleanup(app, create_group, create_user, db):
     user = create_user(1, email='foobar@uni-bonn.de')
     identity = Identity(user_id=1, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
 
+    assert identity in user.identities
+
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
     last_login_dt = identity.safe_last_login_dt

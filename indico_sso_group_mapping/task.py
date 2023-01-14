@@ -18,7 +18,6 @@ def scheduled_groupmembers_check():
         return
     for user in group.members:
         for identity in user.identities:
-            assert False
             if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
                 last_login_dt = identity.safe_last_login_dt
                 login_ago = now_utc() - last_login_dt
