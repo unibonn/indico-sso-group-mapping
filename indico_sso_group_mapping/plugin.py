@@ -26,6 +26,8 @@ class SettingsForm(IndicoForm):
     identity_provider = SelectField(_('Provider'), [InputRequired()],
                                     description=_('The identity provider accounts need to be '
                                                   'associated with to be added to the group.'))
+    identities_domain = StringField(_('Identities Domain'), allow_blank=True,
+                                    description=_('If non-empty, identities must match given domain.'))
     sso_group = QuerySelectField(_('Local Users Group'), [InputRequired()],
                                  query_factory=lambda: LocalGroup.query, get_label='name',
                                  description=_('The group to which anyone logging in '
@@ -45,6 +47,7 @@ class SSOGroupMappingPlugin(IndicoPlugin):
     settings_form = SettingsForm
     default_settings = {
         'identity_provider': None,
+        'identities_domain': '',
         'sso_group': None,
         'enable_group_cleanup': False,
     }
@@ -73,6 +76,8 @@ class SSOGroupMappingPlugin(IndicoPlugin):
         if not group:
             self.logger.warning('Local Users Group not set, plugin ineffective')
             return
-        if identity.provider == identity_provider and identity.identifier.endswith('@acme.ch'):
-            self.logger.info(f"Adding user with identity {identity.identifier} to local group {group}")
-            group.members.add(user)
+        if identity.provider == identity_provider:
+            if not self.settings_form.identities_domain
+               or identity.identifier.endswith('@' + self.settings_form.identities_domain):
+                self.logger.info(f"Adding user with identity {identity.identifier} to local group {group}")
+                group.members.add(user)

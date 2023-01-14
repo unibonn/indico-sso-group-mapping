@@ -99,6 +99,7 @@ def test_login_sso_user(app, create_group, create_identity, create_user, db):
 
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     ssog_plugin.settings.set('identity_provider', 'acme-sso')
+    ssog_plugin.settings.set('identities_domain', 'acme.ch')
     ssog_plugin.settings.set('sso_group', group.group)
 
     user = create_user(1, email='foobar@acme.ch')
@@ -116,6 +117,7 @@ def test_local_user(app, create_group, create_identity, create_user, db):
 
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     ssog_plugin.settings.set('identity_provider', 'acme-sso')
+    ssog_plugin.settings.set('identities_domain', 'acme.ch')
     ssog_plugin.settings.set('sso_group', group.group)
 
     user = create_user(1, email='foobar@cern.ch')
@@ -133,6 +135,7 @@ def test_group_cleanup_neverloggedinuser(app, create_group, create_identity, cre
 
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     ssog_plugin.settings.set('identity_provider', 'acme-sso')
+    ssog_plugin.settings.set('identities_domain', 'acme.ch')
     ssog_plugin.settings.set('sso_group', group.group)
     ssog_plugin.settings.set('enable_group_cleanup', True)
 
@@ -157,6 +160,7 @@ def test_group_cleanup_expireduser(app, create_group, create_identity, create_us
 
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     ssog_plugin.settings.set('identity_provider', 'acme-sso')
+    ssog_plugin.settings.set('identities_domain', 'acme.ch')
     ssog_plugin.settings.set('sso_group', group.group)
     ssog_plugin.settings.set('enable_group_cleanup', True)
 
@@ -183,6 +187,7 @@ def test_group_cleanup_freshuser(app, create_group, create_identity, create_user
 
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     ssog_plugin.settings.set('identity_provider', 'acme-sso')
+    ssog_plugin.settings.set('identities_domain', 'acme.ch')
     ssog_plugin.settings.set('sso_group', group.group)
     ssog_plugin.settings.set('enable_group_cleanup', True)
 

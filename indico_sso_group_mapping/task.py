@@ -28,13 +28,15 @@ def scheduled_groupmembers_check():
         return
     for user in group.members.copy():
         for identity in user.identities:
-            if identity.provider == identity_provider and identity.identifier.endswith('@acme.ch'):
-                last_login_dt = identity.safe_last_login_dt
-                login_ago = now_utc() - last_login_dt
-                SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "
-                                                     "has last logged in {login_ago.days} days ago")
-                if login_ago.days > 365:
-                    SSOGroupMappingPlugin.logger.info(f"Removing user with identity {identity.identifier} "
-                                                      "from local group {group}")
-                    group.members.remove(user)
-                    db.session.flush()
+            if identity.provider == identity_provider:
+                if not SSOGroupMappingPlugin.settings_form.identities_domain
+                   or identity.identifier.endswith('@' + SSOGroupMappingPlugin.settings_form.identities_domain):
+                    last_login_dt = identity.safe_last_login_dt
+                    login_ago = now_utc() - last_login_dt
+                    SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "
+                                                         "has last logged in {login_ago.days} days ago")
+                    if login_ago.days > 365:
+                        SSOGroupMappingPlugin.logger.info(f"Removing user with identity {identity.identifier} "
+                                                          "from local group {group}")
+                        group.members.remove(user)
+                        db.session.flush()
