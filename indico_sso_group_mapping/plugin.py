@@ -78,6 +78,6 @@ class SSOGroupMappingPlugin(IndicoPlugin):
             return
         if identity.provider == identity_provider:
             if (not self.settings.get('identities_domain')
-              or identity.identifier.endswith('@' + self.settings.get('identities_domain'))):
+                    or identity.identifier.endswith('@' + self.settings.get('identities_domain'))):
                 self.logger.info(f"Adding user with identity {identity.identifier} to local group {group}")
                 group.members.add(user)

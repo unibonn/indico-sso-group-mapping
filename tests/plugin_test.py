@@ -112,6 +112,42 @@ def test_login_sso_user(app, create_group, create_identity, create_user, db):
     assert user in group.get_members()
 
 
+def test_login_sso_user_with_foreign_domain(app, create_group, create_identity, create_user, db):
+    group = create_group(1, 'acme-users')
+
+    ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('identity_provider', 'acme-sso')
+    ssog_plugin.settings.set('identities_domain', 'acme.ch')
+    ssog_plugin.settings.set('sso_group', group.group)
+
+    user = create_user(1, email='foobar@acme.ch')
+    identity = create_identity(user, provider='acme-sso', identifier='foobar@acme-foreign.ch')
+
+    assert user not in group.get_members()
+
+    signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
+
+    assert user not in group.get_members()
+
+
+def test_login_sso_user_unchecked_domain(app, create_group, create_identity, create_user, db):
+    group = create_group(1, 'acme-users')
+
+    ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('identity_provider', 'acme-sso')
+    ssog_plugin.settings.set('identities_domain', '')
+    ssog_plugin.settings.set('sso_group', group.group)
+
+    user = create_user(1, email='foobar@acme.ch')
+    identity = create_identity(user, provider='acme-sso', identifier='foobar@acme-foreign.ch')
+
+    assert user not in group.get_members()
+
+    signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
+
+    assert user in group.get_members()
+
+
 def test_local_user(app, create_group, create_identity, create_user, db):
     group = create_group(1, 'acme-users')
 
