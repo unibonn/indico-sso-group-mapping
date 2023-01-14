@@ -7,7 +7,7 @@
 
 from operator import attrgetter
 
-from wtforms.fields import BooleanField, SelectField
+from wtforms.fields import BooleanField, SelectField, StringField
 from wtforms.validators import InputRequired
 from wtforms_sqlalchemy.fields import QuerySelectField
 
@@ -78,6 +78,6 @@ class SSOGroupMappingPlugin(IndicoPlugin):
             return
         if identity.provider == identity_provider:
             if (not self.settings_form.identities_domain
-                or identity.identifier.endswith('@' + self.settings_form.identities_domain)):
+                  or identity.identifier.endswith('@' + self.settings_form.identities_domain)):
                 self.logger.info(f"Adding user with identity {identity.identifier} to local group {group}")
                 group.members.add(user)
