@@ -11,6 +11,7 @@ def scheduled_groupmembers_check():
     from indico_sso_group_mapping.plugin import SSOGroupMappingPlugin
     if not SSOGroupMappingPlugin.settings.get('enable_group_cleanup'):
         SSOGroupMappingPlugin.logger.warning('Local Group cleanup not enabled, skipping run')
+        assert False
         return
     group = SSOGroupMappingPlugin.settings.get('sso_group')
     if not group:

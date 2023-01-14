@@ -7,7 +7,6 @@ import pytest
 from indico.core import signals
 from indico.core.auth import multipass
 from indico.core.plugins import plugin_engine
-
 # from indico.modules.auth.models.identities import Identity
 from indico.modules.auth import Identity
 from indico.modules.groups.models.groups import LocalGroup
