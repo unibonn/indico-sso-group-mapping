@@ -113,6 +113,7 @@ def test_group_cleanup(app, create_group, create_user, db):
 
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     my_plugin.settings.set('sso_group', group.group)
+    my_plugin.settings.set('enable_group_cleanup', True)
 
     user = create_user(1, email='foobar@uni-bonn.de')
     identity = Identity(user_id=1, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
@@ -120,3 +121,5 @@ def test_group_cleanup(app, create_group, create_user, db):
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
     scheduled_groupmembers_check()
+
+    assert(user not in group.get_members())
