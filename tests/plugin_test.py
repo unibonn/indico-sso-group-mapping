@@ -1,5 +1,5 @@
 # This file is part of the Indico plugin indico-sso-group-mapping.
-# Copyright (C) 2002 - 2023 University of Bonn
+# Copyright (C) 2022 - 2023 University of Bonn
 #
 # The Indico plugin indico-sso-group-mapping is free software; you can redistribute it and/or
 # modify it under the terms of the MIT License; see the
@@ -11,15 +11,10 @@ from datetime import timedelta
 import pytest
 
 from indico.core import signals
-# from indico.core.auth import multipass
 from indico.core.plugins import plugin_engine
-# from indico.modules.auth.models.identities import Identity
 from indico.modules.auth import Identity
-# from indico.modules.auth.providers import IndicoIdentityProvider
 from indico.modules.groups.models.groups import LocalGroup
 from indico.util.date_time import now_utc
-# from indico.modules.auth.util import save_identity_info
-# from flask_multipass import IdentityInfo
 from indico.web.flask.app import make_app
 
 from indico_sso_group_mapping.plugin import SSOGroupMappingPlugin
@@ -59,7 +54,6 @@ def app(request, redis_proc):
         'PROVIDER_MAP': {
             'uni-bonn-sso': {'identity_provider': 'uni-bonn-sso'},
         }
-        #FIXME: Add identity provider config!!!
     }
     return make_app(testing=True, config_override=config_override)
 
