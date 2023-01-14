@@ -8,6 +8,7 @@
 from operator import attrgetter
 
 from wtforms.fields import BooleanField, SelectField
+from wtforms.validators import InputRequired
 from wtforms_sqlalchemy.fields import QuerySelectField
 
 from indico.core import signals
@@ -22,7 +23,9 @@ from indico_sso_group_mapping import _
 
 
 class SettingsForm(IndicoForm):
-    identity_provider = SelectField(_('Provider'), [InputRequired()])
+    identity_provider = SelectField(_('Provider'), [InputRequired()],
+                                    description=_('The identity provider accounts need to be '
+                                                  'associated with to be added to the group.'))
     sso_group = QuerySelectField(_('Local Users Group'), [InputRequired()],
                                  query_factory=lambda: LocalGroup.query, get_label='name',
                                  description=_('The group to which anyone logging in '

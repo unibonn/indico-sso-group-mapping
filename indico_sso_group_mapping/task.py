@@ -18,9 +18,9 @@ def scheduled_groupmembers_check():
     if not SSOGroupMappingPlugin.settings.get('enable_group_cleanup'):
         SSOGroupMappingPlugin.logger.warning('Local Group cleanup not enabled, skipping run')
         return
-    identity_provider = self.settings.get('identity_provider')
+    identity_provider = SSOGroupMappingPlugin.settings.get('identity_provider')
     if not identity_provider:
-        self.logger.warning('Identity provider not set, not cleaning up group')
+        SSOGroupMappingPlugin.logger.warning('Identity provider not set, not cleaning up group')
         return
     group = SSOGroupMappingPlugin.settings.get('sso_group')
     if not group:
