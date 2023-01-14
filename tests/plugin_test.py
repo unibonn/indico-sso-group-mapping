@@ -120,6 +120,10 @@ def test_group_cleanup(app, create_group, create_user, db):
 
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
+    last_login_dt = identity.safe_last_login_dt
+    login_ago = datetime.now() - last_login_dt
+    assert(login_ago.days > 365)
+
     scheduled_groupmembers_check()
 
     assert(user not in group.get_members())
