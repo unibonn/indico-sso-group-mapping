@@ -1,9 +1,14 @@
-
+# This file is part of the Indico plugin indico-sso-group-mapping.
+# Copyright (C) 2002 - 2023 University of Bonn
+#
+# The Indico plugin indico-sso-group-mapping is free software; you can redistribute it and/or
+# modify it under the terms of the MIT License; see the
+# LICENSE file for more details.
 
 import os
+from datetime import timedelta
 
 import pytest
-from datetime import timedelta
 
 from indico.core import signals
 # from indico.core.auth import multipass
@@ -12,7 +17,7 @@ from indico.core.plugins import plugin_engine
 from indico.modules.auth import Identity
 # from indico.modules.auth.providers import IndicoIdentityProvider
 from indico.modules.groups.models.groups import LocalGroup
-from indico.util.date_time import as_utc, now_utc
+from indico.util.date_time import now_utc
 # from indico.modules.auth.util import save_identity_info
 # from flask_multipass import IdentityInfo
 from indico.web.flask.app import make_app
@@ -91,10 +96,6 @@ def test_create_sso_group_mapping_plugin(app):
 
 
 def test_login_sso_user(app, create_group, create_identity, create_user, db):
-    #FIXME: Need to import multipass from Indico!
-    # identity_providers = multipass.identity_providers.values()
-    #  From this, get the active provider and pass it into IdentityInfo!
-
     group = create_group(1, 'uni-bonn-users')
 
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
@@ -108,9 +109,6 @@ def test_login_sso_user(app, create_group, create_identity, create_user, db):
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
     assert user in group.get_members()
-
-    # identity_info = IdentityInfo('uni-bonn-sso', identifier='foobar@uni-bonn.de')
-    # save_identity_info(identity_info, user)
 
 
 def test_local_user(app, create_group, create_identity, create_user, db):
