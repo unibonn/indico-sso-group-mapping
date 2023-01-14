@@ -5,7 +5,7 @@ header: |-
   {comment_start} This file is part of the Indico plugin indico-sso-group-mapping.
   {comment_middle} Copyright (C) {dates} {name}
   {comment_middle}
-  {comment_middle} The Indico plugin indico-sso-group-mapping is free software; you can redistribute
-  {comment_middle} it and/or modify it under the terms of the MIT License;
+  {comment_middle} The Indico plugin indico-sso-group-mapping is free software; you can
+  {comment_middle} redistribute it and/or modify it under the terms of the MIT License;
   {comment_middle} see the LICENSE file for more details.
   {comment_end}
