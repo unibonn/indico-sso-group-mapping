@@ -29,8 +29,8 @@ def scheduled_groupmembers_check():
     for user in group.members.copy():
         for identity in user.identities:
             if identity.provider == identity_provider:
-                if not SSOGroupMappingPlugin.settings_form.identities_domain
-                   or identity.identifier.endswith('@' + SSOGroupMappingPlugin.settings_form.identities_domain):
+                if (not SSOGroupMappingPlugin.settings_form.identities_domain
+                    or identity.identifier.endswith('@' + SSOGroupMappingPlugin.settings_form.identities_domain)):
                     last_login_dt = identity.safe_last_login_dt
                     login_ago = now_utc() - last_login_dt
                     SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "
