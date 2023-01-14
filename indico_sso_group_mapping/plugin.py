@@ -35,6 +35,9 @@ def scheduled_groupmembers_check():
                 login_ago = datetime.now() - last_login_dt
                 SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "\
                                                       "has last logged in {login_ago.days} days ago")
+                if login_ago.days > 365:
+                    self.logger.info(f"Removing user with identity {identity.identifier} from local group {group}")
+                    group.members.remove(user)
 
 
 class SettingsForm(IndicoForm):
