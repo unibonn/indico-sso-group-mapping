@@ -16,7 +16,8 @@ from indico.modules.groups.models.groups import LocalGroup
 # from flask_multipass import IdentityInfo
 from indico.web.flask.app import make_app
 
-from indico_sso_group_mapping.plugin import scheduled_groupmembers_check, SSOGroupMappingPlugin
+from indico_sso_group_mapping.plugin import SSOGroupMappingPlugin
+from indico_sso_group_mapping.task import scheduled_groupmembers_check
 
 
 # Override app fixture imported from Indico pytest plugin:
