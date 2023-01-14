@@ -1,12 +1,13 @@
 
 
 import os
+
 import pytest
 
 from indico.core import signals
 from indico.core.auth import multipass
 from indico.core.plugins import plugin_engine
-from indico.util.date_time import as_utc, now_utc
+from indico.util.date_time import now_utc
 
 # from indico.modules.auth.models.identities import Identity
 from indico.modules.auth import Identity
@@ -49,7 +50,7 @@ def app(request, redis_proc):
             },
         },
         'PROVIDER_MAP': {
-            'uni-bonn-sso': {'identity_provider': 'uni-bonn-sso',},
+            'uni-bonn-sso': {'identity_provider': 'uni-bonn-sso'},
         }
         #FIXME: Add identity provider config!!!
     }
