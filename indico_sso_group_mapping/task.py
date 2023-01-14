@@ -17,8 +17,8 @@ def scheduled_groupmembers_check():
         SSOGroupMappingPlugin.logger.warning('Local Users Group not set, not cleaning up group')
         return
     for user in group.members:
-        assert user == 'Foo'
         for identity in user.identities:
+            assert identity.provider == 'uni-bonn-sso'
             if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
                 last_login_dt = identity.safe_last_login_dt
                 login_ago = now_utc() - last_login_dt
