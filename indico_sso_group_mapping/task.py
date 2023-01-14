@@ -6,6 +6,7 @@ from indico.core.celery import celery
 from indico.core.db import db
 from indico.util.date_time import now_utc
 
+
 @celery.periodic_task(run_every=crontab(minute='*/5'), plugin='sso_group_mapping')
 def scheduled_groupmembers_check():
     from indico_sso_group_mapping.plugin import SSOGroupMappingPlugin

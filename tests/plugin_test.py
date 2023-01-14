@@ -3,15 +3,16 @@
 import os
 
 import pytest
+from datetime import timedelta
 
 from indico.core import signals
-from indico.core.auth import multipass
+# from indico.core.auth import multipass
 from indico.core.plugins import plugin_engine
 # from indico.modules.auth.models.identities import Identity
 from indico.modules.auth import Identity
-from indico.modules.auth.providers import IndicoIdentityProvider
+# from indico.modules.auth.providers import IndicoIdentityProvider
 from indico.modules.groups.models.groups import LocalGroup
-from indico.util.date_time import now_utc
+from indico.util.date_time import as_utc, now_utc
 # from indico.modules.auth.util import save_identity_info
 # from flask_multipass import IdentityInfo
 from indico.web.flask.app import make_app
@@ -128,6 +129,29 @@ def test_local_user(app, create_group, create_identity, create_user, db):
     assert user not in group.get_members()
 
 
+def test_group_cleanup_neverloggedinuser(app, create_group, create_identity, create_user, db):
+    group = create_group(1, 'uni-bonn-users')
+
+    my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    my_plugin.settings.set('sso_group', group.group)
+    my_plugin.settings.set('enable_group_cleanup', True)
+
+    user = create_user(1, email='foobar@uni-bonn.de')
+    identity = create_identity(user, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
+
+    assert identity in user.identities
+
+    signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
+
+    last_login_dt = identity.safe_last_login_dt
+    login_ago = now_utc() - last_login_dt
+    assert login_ago.days > 365
+
+    scheduled_groupmembers_check()
+
+    assert user not in group.get_members()
+
+
 def test_group_cleanup_expireduser(app, create_group, create_identity, create_user, db):
     group = create_group(1, 'uni-bonn-users')
 
@@ -140,6 +164,8 @@ def test_group_cleanup_expireduser(app, create_group, create_identity, create_us
 
     assert identity in user.identities
 
+    identity.register_login('127.0.0.1')
+    identity.last_login_dt = now_utc() - timedelta(days=400)
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
     last_login_dt = identity.safe_last_login_dt
@@ -172,4 +198,4 @@ def test_group_cleanup_freshuser(app, create_group, create_identity, create_user
 
     scheduled_groupmembers_check()
 
-    assert user not in group.get_members()
+    assert user in group.get_members()
