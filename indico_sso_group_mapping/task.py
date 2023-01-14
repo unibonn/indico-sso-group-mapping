@@ -18,13 +18,17 @@ def scheduled_groupmembers_check():
     if not SSOGroupMappingPlugin.settings.get('enable_group_cleanup'):
         SSOGroupMappingPlugin.logger.warning('Local Group cleanup not enabled, skipping run')
         return
+    identity_provider = self.settings.get('identity_provider')
+    if not identity_provider:
+        self.logger.warning('Identity provider not set, not cleaning up group')
+        return
     group = SSOGroupMappingPlugin.settings.get('sso_group')
     if not group:
         SSOGroupMappingPlugin.logger.warning('Local Users Group not set, not cleaning up group')
         return
     for user in group.members.copy():
         for identity in user.identities:
-            if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
+            if identity.provider == identity_provider and identity.identifier.endswith('@acme.ch'):
                 last_login_dt = identity.safe_last_login_dt
                 login_ago = now_utc() - last_login_dt
                 SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "

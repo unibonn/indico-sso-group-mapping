@@ -22,8 +22,8 @@ from indico_sso_group_mapping import _
 
 
 class SettingsForm(IndicoForm):
-    identity_provider = SelectField(_('Provider'))
-    sso_group = QuerySelectField(_('Local Users Group'), allow_blank=True,
+    identity_provider = SelectField(_('Provider'), [InputRequired()])
+    sso_group = QuerySelectField(_('Local Users Group'), [InputRequired()],
                                  query_factory=lambda: LocalGroup.query, get_label='name',
                                  description=_('The group to which anyone logging in '
                                                'with a matching SSO account is added.'))
@@ -41,6 +41,7 @@ class SSOGroupMappingPlugin(IndicoPlugin):
     configurable = True
     settings_form = SettingsForm
     default_settings = {
+        'identity_provider': None,
         'sso_group': None,
         'enable_group_cleanup': False,
     }
@@ -62,10 +63,13 @@ class SSOGroupMappingPlugin(IndicoPlugin):
     def _user_logged_in(self, user, identity, admin_impersonation, **kwargs):
         if admin_impersonation:
             return
+        identity_provider = self.settings.get('identity_provider')
+        if not identity_provider:
+            self.logger.warning('Identity provider not set, plugin ineffective')
         group = self.settings.get('sso_group')
         if not group:
             self.logger.warning('Local Users Group not set, plugin ineffective')
             return
-        if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
+        if identity.provider == identity_provider and identity.identifier.endswith('@acme.ch'):
             self.logger.info(f"Adding user with identity {identity.identifier} to local group {group}")
             group.members.add(user)

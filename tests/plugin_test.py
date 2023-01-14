@@ -37,22 +37,22 @@ def app(request, redis_proc):
         'SECRET_KEY': os.urandom(16),
         'SMTP_USE_CELERY': False,
         'AUTH_PROVIDERS': {
-            'uni-bonn-sso': {
+            'acme-sso': {
                 'type':             'shibboleth',
-                'title':            'Uni-ID',
+                'title':            'ACME-ID',
                 'attrs_prefix':     '',
                 'callback_uri':     '/shibboleth',
             },
         },
         'IDENTITY_PROVIDERS': {
-            'uni-bonn-sso': {
+            'acme-sso': {
                 'type':             'shibboleth',
-                'title':            'Uni-ID',
+                'title':            'ACME-ID',
                 'identifier_field': 'eppn',
             },
         },
         'PROVIDER_MAP': {
-            'uni-bonn-sso': {'identity_provider': 'uni-bonn-sso'},
+            'acme-sso': {'identity_provider': 'acme-sso'},
         }
     }
     return make_app(testing=True, config_override=config_override)
@@ -91,17 +91,18 @@ def test_create_sso_group_mapping_plugin(app):
 
 def test_idp_choices(app):
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    assert ('uni-bonn-sso', 'Uni-ID') in ssog_plugin.settings_form.identity_provider.choices
+    assert ('acme-sso', 'ACME-ID') in ssog_plugin.settings_form.identity_provider.choices
 
 
 def test_login_sso_user(app, create_group, create_identity, create_user, db):
-    group = create_group(1, 'uni-bonn-users')
+    group = create_group(1, 'acme-users')
 
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('identity_provider', 'acme-sso')
     ssog_plugin.settings.set('sso_group', group.group)
 
-    user = create_user(1, email='foobar@uni-bonn.de')
-    identity = create_identity(user, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
+    user = create_user(1, email='foobar@acme.ch')
+    identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
 
     assert user not in group.get_members()
 
@@ -111,9 +112,10 @@ def test_login_sso_user(app, create_group, create_identity, create_user, db):
 
 
 def test_local_user(app, create_group, create_identity, create_user, db):
-    group = create_group(1, 'uni-bonn-users')
+    group = create_group(1, 'acme-users')
 
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('identity_provider', 'acme-sso')
     ssog_plugin.settings.set('sso_group', group.group)
 
     user = create_user(1, email='foobar@cern.ch')
@@ -127,14 +129,15 @@ def test_local_user(app, create_group, create_identity, create_user, db):
 
 
 def test_group_cleanup_neverloggedinuser(app, create_group, create_identity, create_user, db):
-    group = create_group(1, 'uni-bonn-users')
+    group = create_group(1, 'acme-users')
 
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('identity_provider', 'acme-sso')
     ssog_plugin.settings.set('sso_group', group.group)
     ssog_plugin.settings.set('enable_group_cleanup', True)
 
-    user = create_user(1, email='foobar@uni-bonn.de')
-    identity = create_identity(user, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
+    user = create_user(1, email='foobar@acme.ch')
+    identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
 
     assert identity in user.identities
 
@@ -150,14 +153,15 @@ def test_group_cleanup_neverloggedinuser(app, create_group, create_identity, cre
 
 
 def test_group_cleanup_expireduser(app, create_group, create_identity, create_user, db):
-    group = create_group(1, 'uni-bonn-users')
+    group = create_group(1, 'acme-users')
 
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('identity_provider', 'acme-sso')
     ssog_plugin.settings.set('sso_group', group.group)
     ssog_plugin.settings.set('enable_group_cleanup', True)
 
-    user = create_user(1, email='foobar@uni-bonn.de')
-    identity = create_identity(user, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
+    user = create_user(1, email='foobar@acme.ch')
+    identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
 
     assert identity in user.identities
 
@@ -175,14 +179,15 @@ def test_group_cleanup_expireduser(app, create_group, create_identity, create_us
 
 
 def test_group_cleanup_freshuser(app, create_group, create_identity, create_user, db):
-    group = create_group(1, 'uni-bonn-users')
+    group = create_group(1, 'acme-users')
 
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('identity_provider', 'acme-sso')
     ssog_plugin.settings.set('sso_group', group.group)
     ssog_plugin.settings.set('enable_group_cleanup', True)
 
-    user = create_user(1, email='foobar@uni-bonn.de')
-    identity = create_identity(user, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
+    user = create_user(1, email='foobar@acme.ch')
+    identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
 
     assert identity in user.identities
 
