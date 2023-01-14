@@ -8,7 +8,7 @@
 from operator import attrgetter
 
 from wtforms.fields import BooleanField, IntegerField, SelectField, StringField
-from wtforms.validators import HiddenUnless, InputRequired, NumberRange
+from wtforms.validators import InputRequired, NumberRange
 from wtforms_sqlalchemy.fields import QuerySelectField
 
 from indico.core import signals
@@ -17,6 +17,7 @@ from indico.core.plugins import IndicoPlugin
 from indico.core.settings.converters import ModelConverter
 from indico.modules.groups.models.groups import LocalGroup
 from indico.web.forms.base import IndicoForm
+from indico.web.forms.validators import HiddenUnless
 from indico.web.forms.widgets import SwitchWidget
 
 from indico_sso_group_mapping import _
