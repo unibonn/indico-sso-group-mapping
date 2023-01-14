@@ -7,8 +7,8 @@
 
 from operator import attrgetter
 
-from wtforms.fields import BooleanField, SelectField, StringField
-from wtforms.validators import InputRequired
+from wtforms.fields import BooleanField, IntegerField, SelectField, StringField
+from wtforms.validators import HiddenUnless, InputRequired
 from wtforms_sqlalchemy.fields import QuerySelectField
 
 from indico.core import signals
@@ -34,7 +34,12 @@ class SettingsForm(IndicoForm):
                                                'with a matching SSO account is added.'))
     enable_group_cleanup = BooleanField(_('Enable periodic Local Users Group cleanup'), widget=SwitchWidget(),
                                         description=_('Enable periodic cleanup of Local Users Group '
-                                                      'for SSO accounts without login in the past year.'))
+                                                      'for SSO accounts without login in configured days.'))
+    expire_login_days = IntegerField(_('Expire login after days'),
+                                     [HiddenUnless('enable_group_cleanup', preserve_data=True),
+                                      InputRequired(), NumberRange(min=1)],
+                                     description=_('Days after which logins are considered too old '
+                                                   'and users are removed from group in cleanup.'))
 
 
 class SSOGroupMappingPlugin(IndicoPlugin):
@@ -50,6 +55,7 @@ class SSOGroupMappingPlugin(IndicoPlugin):
         'identities_domain': '',
         'sso_group': None,
         'enable_group_cleanup': False,
+        'expire_login_days': 365,
     }
     settings_converters = {
         'sso_group': ModelConverter(LocalGroup),
