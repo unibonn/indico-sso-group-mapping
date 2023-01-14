@@ -71,12 +71,24 @@ def create_group(db):
     return _create_group
 
 
+@pytest.fixture
+def create_identity(db):
+    """Return a callable which lets you create dummy identities."""
+    def _create_identity(user, provider, identifier):
+        identity = Identity(user_id=user.id, provider=provider, identifier=identifier)
+        db.session.add(identity)
+        db.session.flush()
+        return identity
+
+    return _create_identity
+
+
 def test_create_sso_group_mapping_plugin(app):
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     assert my_plugin.configurable is True
 
 
-def test_login_sso_user(app, create_group, create_user, db):
+def test_login_sso_user(app, create_group, create_identity, create_user, db):
     #FIXME: Need to import multipass from Indico!
     # identity_providers = multipass.identity_providers.values()
     #  From this, get the active provider and pass it into IdentityInfo!
@@ -87,7 +99,7 @@ def test_login_sso_user(app, create_group, create_user, db):
     my_plugin.settings.set('sso_group', group.group)
 
     user = create_user(1, email='foobar@uni-bonn.de')
-    identity = Identity(user_id=1, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
+    identity = create_identity(user, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
 
     assert user not in group.get_members()
 
@@ -99,7 +111,7 @@ def test_login_sso_user(app, create_group, create_user, db):
     # save_identity_info(identity_info, user)
 
 
-def test_local_sso_user(app, create_group, create_user, db):
+def test_local_sso_user(app, create_group, create_identity, create_user, db):
     local_provider = multipass.default_local_auth_provider
 
     group = create_group(1, 'uni-bonn-users')
@@ -108,7 +120,7 @@ def test_local_sso_user(app, create_group, create_user, db):
     my_plugin.settings.set('sso_group', group.group)
 
     user = create_user(1, email='foobar@cern.ch')
-    identity = Identity(user_id=1, provider=local_provider, identifier='foobar@cern.ch')
+    identity = create_identity(user, provider=local_provider, identifier='foobar@cern.ch')
 
     assert user not in group.get_members()
 
@@ -117,7 +129,7 @@ def test_local_sso_user(app, create_group, create_user, db):
     assert user not in group.get_members()
 
 
-def test_group_cleanup(app, create_group, create_user, db):
+def test_group_cleanup(app, create_group, create_identity, create_user, db):
     group = create_group(1, 'uni-bonn-users')
 
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
@@ -125,7 +137,7 @@ def test_group_cleanup(app, create_group, create_user, db):
     my_plugin.settings.set('enable_group_cleanup', True)
 
     user = create_user(1, email='foobar@uni-bonn.de')
-    identity = Identity(user_id=1, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
+    identity = create_identity(user, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
 
     assert identity in user.identities
 
