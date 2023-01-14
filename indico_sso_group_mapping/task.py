@@ -3,7 +3,6 @@
 from celery.schedules import crontab
 
 from indico.core.celery import celery
-from indico.modules.groups.models.groups import LocalGroup
 from indico.util.date_time import now_utc
 
 

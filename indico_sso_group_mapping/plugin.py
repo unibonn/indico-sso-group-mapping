@@ -7,11 +7,9 @@ from wtforms_sqlalchemy.fields import QuerySelectField
 
 from indico.core import signals
 from indico.core.auth import multipass
-from indico.core.celery import celery
 from indico.core.plugins import IndicoPlugin
 from indico.core.settings.converters import ModelConverter
 from indico.modules.groups.models.groups import LocalGroup
-from indico.util.date_time import now_utc
 from indico.web.forms.base import IndicoForm
 from indico.web.forms.widgets import SwitchWidget
 
