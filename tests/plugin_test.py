@@ -9,6 +9,7 @@ from indico.core.auth import multipass
 from indico.core.plugins import plugin_engine
 # from indico.modules.auth.models.identities import Identity
 from indico.modules.auth import Identity
+from indico.modules.auth.providers import IndicoIdentityProvider
 from indico.modules.groups.models.groups import LocalGroup
 from indico.util.date_time import now_utc
 # from indico.modules.auth.util import save_identity_info
@@ -112,15 +113,13 @@ def test_login_sso_user(app, create_group, create_identity, create_user, db):
 
 
 def test_local_sso_user(app, create_group, create_identity, create_user, db):
-    local_provider = multipass.default_local_auth_provider
-
     group = create_group(1, 'uni-bonn-users')
 
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     my_plugin.settings.set('sso_group', group.group)
 
     user = create_user(1, email='foobar@cern.ch')
-    identity = create_identity(user, provider=local_provider, identifier='foobar@cern.ch')
+    identity = create_identity(user, provider=IndicoIdentityProvider, identifier='foobar@cern.ch')
 
     assert user not in group.get_members()
 
