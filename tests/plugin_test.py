@@ -91,7 +91,7 @@ def test_create_sso_group_mapping_plugin(app):
 
 def test_idp_choices(app):
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    assert 'uni-bonn-sso' in ssog_plugin.settings_form.identity_provider.choices
+    assert ('uni-bonn-sso', 'Uni-ID') in ssog_plugin.settings_form.identity_provider.choices
 
 
 def test_login_sso_user(app, create_group, create_identity, create_user, db):
