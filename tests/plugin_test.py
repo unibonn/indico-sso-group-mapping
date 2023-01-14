@@ -174,6 +174,7 @@ def test_group_cleanup_neverloggedinuser(app, create_group, create_identity, cre
     ssog_plugin.settings.set('identities_domain', 'acme.ch')
     ssog_plugin.settings.set('sso_group', group.group)
     ssog_plugin.settings.set('enable_group_cleanup', True)
+    ssog_plugin.settings.set('expire_login_days', 200)
 
     user = create_user(1, email='foobar@acme.ch')
     identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
@@ -184,7 +185,7 @@ def test_group_cleanup_neverloggedinuser(app, create_group, create_identity, cre
 
     last_login_dt = identity.safe_last_login_dt
     login_ago = now_utc() - last_login_dt
-    assert login_ago.days > 365
+    assert login_ago.days > 200
 
     scheduled_groupmembers_check()
 
@@ -199,6 +200,7 @@ def test_group_cleanup_expireduser(app, create_group, create_identity, create_us
     ssog_plugin.settings.set('identities_domain', 'acme.ch')
     ssog_plugin.settings.set('sso_group', group.group)
     ssog_plugin.settings.set('enable_group_cleanup', True)
+    ssog_plugin.settings.set('expire_login_days', 200)
 
     user = create_user(1, email='foobar@acme.ch')
     identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
@@ -206,12 +208,40 @@ def test_group_cleanup_expireduser(app, create_group, create_identity, create_us
     assert identity in user.identities
 
     identity.register_login('127.0.0.1')
-    identity.last_login_dt = now_utc() - timedelta(days=400)
+    identity.last_login_dt = now_utc() - timedelta(days=300)
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
     last_login_dt = identity.safe_last_login_dt
     login_ago = now_utc() - last_login_dt
-    assert login_ago.days > 365
+    assert login_ago.days > 200
+
+    scheduled_groupmembers_check()
+
+    assert user not in group.get_members()
+
+
+def test_group_cleanup_unexpireduser(app, create_group, create_identity, create_user, db):
+    group = create_group(1, 'acme-users')
+
+    ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('identity_provider', 'acme-sso')
+    ssog_plugin.settings.set('identities_domain', 'acme.ch')
+    ssog_plugin.settings.set('sso_group', group.group)
+    ssog_plugin.settings.set('enable_group_cleanup', True)
+    ssog_plugin.settings.set('expire_login_days', 200)
+
+    user = create_user(1, email='foobar@acme.ch')
+    identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
+
+    assert identity in user.identities
+
+    identity.register_login('127.0.0.1')
+    identity.last_login_dt = now_utc() - timedelta(days=100)
+    signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
+
+    last_login_dt = identity.safe_last_login_dt
+    login_ago = now_utc() - last_login_dt
+    assert login_ago.days < 200
 
     scheduled_groupmembers_check()
 
@@ -226,6 +256,7 @@ def test_group_cleanup_freshuser(app, create_group, create_identity, create_user
     ssog_plugin.settings.set('identities_domain', 'acme.ch')
     ssog_plugin.settings.set('sso_group', group.group)
     ssog_plugin.settings.set('enable_group_cleanup', True)
+    ssog_plugin.settings.set('expire_login_days', 200)
 
     user = create_user(1, email='foobar@acme.ch')
     identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
