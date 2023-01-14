@@ -85,15 +85,20 @@ def create_identity(db):
 
 
 def test_create_sso_group_mapping_plugin(app):
-    my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    assert my_plugin.configurable is True
+    ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    assert ssog_plugin.configurable is True
+
+
+def test_idp_choices(app):
+    ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    assert 'uni-bonn-sso' in ssog_plugin.settings_form.identity_provider.choices
 
 
 def test_login_sso_user(app, create_group, create_identity, create_user, db):
     group = create_group(1, 'uni-bonn-users')
 
-    my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    my_plugin.settings.set('sso_group', group.group)
+    ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('sso_group', group.group)
 
     user = create_user(1, email='foobar@uni-bonn.de')
     identity = create_identity(user, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
@@ -108,8 +113,8 @@ def test_login_sso_user(app, create_group, create_identity, create_user, db):
 def test_local_user(app, create_group, create_identity, create_user, db):
     group = create_group(1, 'uni-bonn-users')
 
-    my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    my_plugin.settings.set('sso_group', group.group)
+    ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('sso_group', group.group)
 
     user = create_user(1, email='foobar@cern.ch')
     identity = create_identity(user, provider='indico', identifier='foobar@cern.ch')
@@ -124,9 +129,9 @@ def test_local_user(app, create_group, create_identity, create_user, db):
 def test_group_cleanup_neverloggedinuser(app, create_group, create_identity, create_user, db):
     group = create_group(1, 'uni-bonn-users')
 
-    my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    my_plugin.settings.set('sso_group', group.group)
-    my_plugin.settings.set('enable_group_cleanup', True)
+    ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('sso_group', group.group)
+    ssog_plugin.settings.set('enable_group_cleanup', True)
 
     user = create_user(1, email='foobar@uni-bonn.de')
     identity = create_identity(user, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
@@ -147,9 +152,9 @@ def test_group_cleanup_neverloggedinuser(app, create_group, create_identity, cre
 def test_group_cleanup_expireduser(app, create_group, create_identity, create_user, db):
     group = create_group(1, 'uni-bonn-users')
 
-    my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    my_plugin.settings.set('sso_group', group.group)
-    my_plugin.settings.set('enable_group_cleanup', True)
+    ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('sso_group', group.group)
+    ssog_plugin.settings.set('enable_group_cleanup', True)
 
     user = create_user(1, email='foobar@uni-bonn.de')
     identity = create_identity(user, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
@@ -172,9 +177,9 @@ def test_group_cleanup_expireduser(app, create_group, create_identity, create_us
 def test_group_cleanup_freshuser(app, create_group, create_identity, create_user, db):
     group = create_group(1, 'uni-bonn-users')
 
-    my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    my_plugin.settings.set('sso_group', group.group)
-    my_plugin.settings.set('enable_group_cleanup', True)
+    ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
+    ssog_plugin.settings.set('sso_group', group.group)
+    ssog_plugin.settings.set('enable_group_cleanup', True)
 
     user = create_user(1, email='foobar@uni-bonn.de')
     identity = create_identity(user, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
