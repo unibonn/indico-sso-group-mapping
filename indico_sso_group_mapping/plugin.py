@@ -8,7 +8,7 @@
 from operator import attrgetter
 
 from wtforms.fields import BooleanField, IntegerField, SelectField, StringField
-from wtforms.validators import HiddenUnless, InputRequired
+from wtforms.validators import HiddenUnless, InputRequired, NumberRange
 from wtforms_sqlalchemy.fields import QuerySelectField
 
 from indico.core import signals
