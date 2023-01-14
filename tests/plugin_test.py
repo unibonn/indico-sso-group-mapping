@@ -1,4 +1,5 @@
-from datetime import datetime
+
+
 import os
 import pytest
 
@@ -7,6 +8,7 @@ from indico.core.auth import multipass
 from indico.core.plugins import plugin_engine
 from indico_sso_group_mapping.plugin import scheduled_groupmembers_check, SSOGroupMappingPlugin
 from indico.modules.groups.models.groups import LocalGroup
+from indico.util.date_time import as_utc, now_utc
 
 # from indico.modules.auth.models.identities import Identity
 from indico.modules.auth import Identity
@@ -48,7 +50,7 @@ def app(request, redis_proc):
             },
         },
         'PROVIDER_MAP': {
-            'uni-bonn-sso': { 'identity_provider': 'uni-bonn-sso', },
+            'uni-bonn-sso': {'identity_provider': 'uni-bonn-sso',},
         }
         #FIXME: Add identity provider config!!!
     }
@@ -71,7 +73,7 @@ def create_group(db):
 
 def test_create_sso_group_mapping_plugin(app):
     my_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    assert(my_plugin.configurable is True)
+    assert my_plugin.configurable is True
 
 
 def test_login_sso_user(app, create_group, create_user, db):
@@ -87,11 +89,11 @@ def test_login_sso_user(app, create_group, create_user, db):
     user = create_user(1, email='foobar@uni-bonn.de')
     identity = Identity(user_id=1, provider='uni-bonn-sso', identifier='foobar@uni-bonn.de')
 
-    assert(user not in group.get_members())
+    assert user not in group.get_members()
 
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
-    assert(user in group.get_members())
+    assert user in group.get_members()
 
     # identity_info = IdentityInfo('uni-bonn-sso', identifier='foobar@uni-bonn.de')
     # save_identity_info(identity_info, user)
@@ -108,11 +110,11 @@ def test_local_sso_user(app, create_group, create_user, db):
     user = create_user(1, email='foobar@cern.ch')
     identity = Identity(user_id=1, provider=local_provider, identifier='foobar@cern.ch')
 
-    assert(user not in group.get_members())
+    assert user not in group.get_members()
 
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
-    assert(user not in group.get_members())
+    assert user not in group.get_members()
 
 
 def test_group_cleanup(app, create_group, create_user, db):
@@ -128,9 +130,9 @@ def test_group_cleanup(app, create_group, create_user, db):
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
     last_login_dt = identity.safe_last_login_dt
-    login_ago = datetime.now() - last_login_dt
-    assert(login_ago.days > 365)
+    login_ago = now_utc() - last_login_dt
+    assert login_ago.days > 365
 
     scheduled_groupmembers_check()
 
-    assert(user not in group.get_members())
+    assert user not in group.get_members()

@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MIT
 
-from datetime import datetime
 from operator import attrgetter
 
 from celery.schedules import crontab
@@ -13,6 +12,7 @@ from indico.core.celery import celery
 from indico.core.plugins import IndicoPlugin
 from indico.core.settings.converters import ModelConverter
 from indico.modules.groups.models.groups import LocalGroup
+from indico.util.date_time import as_utc, now_utc
 from indico.web.forms.base import IndicoForm
 from indico.web.forms.widgets import SwitchWidget
 
@@ -32,7 +32,7 @@ def scheduled_groupmembers_check():
         for identity in user.identities:
             if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
                 last_login_dt = identity.safe_last_login_dt
-                login_ago = datetime.now() - last_login_dt
+                login_ago = now_utc() - last_login_dt
                 SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "
                                                      "has last logged in {login_ago.days} days ago")
                 if login_ago.days > 365:
