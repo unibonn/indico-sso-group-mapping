@@ -3,8 +3,8 @@
 from celery.schedules import crontab
 
 from indico.core.celery import celery
+from indico.core.db import db
 from indico.util.date_time import now_utc
-
 
 @celery.periodic_task(run_every=crontab(minute='*/5'), plugin='sso_group_mapping')
 def scheduled_groupmembers_check():
@@ -16,7 +16,7 @@ def scheduled_groupmembers_check():
     if not group:
         SSOGroupMappingPlugin.logger.warning('Local Users Group not set, not cleaning up group')
         return
-    for user in group.members:
+    for user in group.members.copy():
         for identity in user.identities:
             if identity.provider == 'uni-bonn-sso' and identity.identifier.endswith('@uni-bonn.de'):
                 last_login_dt = identity.safe_last_login_dt
@@ -27,3 +27,4 @@ def scheduled_groupmembers_check():
                     SSOGroupMappingPlugin.logger.info(f"Removing user with identity {identity.identifier} "
                                                       "from local group {group}")
                     group.members.remove(user)
+                    db.session.flush()
