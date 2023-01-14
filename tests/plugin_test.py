@@ -61,10 +61,10 @@ def app(request, redis_proc):
 @pytest.fixture
 def create_group(db):
     """Return a callable which lets you create dummy groups."""
-    def _create_group(id_, group_name):
+    def _create_group(id_, group_name=None):
         group = LocalGroup()
         group.id = id_
-        group.name = group_name
+        group.name = f'dummy-{id_}' if group_name is None else group_name
         db.session.add(group)
         db.session.flush()
         return group.proxy
