@@ -104,6 +104,7 @@ def test_login_sso_user(app, create_group, create_identity, create_user, db):
 
     user = create_user(1, email='foobar@acme.ch')
     identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
+    assert identity in user.identities
 
     assert user not in group.get_members()
 
@@ -179,8 +180,6 @@ def test_group_cleanup_neverloggedinuser(app, create_group, create_identity, cre
     user = create_user(1, email='foobar@acme.ch')
     identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
 
-    assert identity in user.identities
-
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
 
     last_login_dt = identity.safe_last_login_dt
@@ -233,8 +232,6 @@ def test_group_cleanup_unexpireduser(app, create_group, create_identity, create_
     user = create_user(1, email='foobar@acme.ch')
     identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
 
-    assert identity in user.identities
-
     identity.register_login('127.0.0.1')
     identity.last_login_dt = now_utc() - timedelta(days=100)
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
@@ -245,7 +242,7 @@ def test_group_cleanup_unexpireduser(app, create_group, create_identity, create_
 
     scheduled_groupmembers_check()
 
-    assert user not in group.get_members()
+    assert user in group.get_members()
 
 
 def test_group_cleanup_freshuser(app, create_group, create_identity, create_user, db):
@@ -260,8 +257,6 @@ def test_group_cleanup_freshuser(app, create_group, create_identity, create_user
 
     user = create_user(1, email='foobar@acme.ch')
     identity = create_identity(user, provider='acme-sso', identifier='foobar@acme.ch')
-
-    assert identity in user.identities
 
     identity.register_login('127.0.0.1')
     signals.users.logged_in.send(user, identity=identity, admin_impersonation=False)
