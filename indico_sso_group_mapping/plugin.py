@@ -27,7 +27,7 @@ class SettingsForm(IndicoForm):
     identity_provider = SelectField(_('Provider'), [InputRequired()],
                                     description=_('The identity provider accounts need to be '
                                                   'associated with to be added to the group.'))
-    identities_domain = StringField(_('Identities Domain'), allow_blank=True,
+    identities_domain = StringField(_('Identities Domain'),
                                     description=_('If non-empty, identities must match given domain.'))
     sso_group = QuerySelectField(_('Local Users Group'), [InputRequired()],
                                  query_factory=lambda: LocalGroup.query, get_label='name',
