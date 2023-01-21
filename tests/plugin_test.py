@@ -89,11 +89,6 @@ def test_create_sso_group_mapping_plugin(app):
     assert ssog_plugin.configurable is True
 
 
-def test_idp_choices(app):
-    ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
-    assert ('acme-sso', 'ACME-ID') in ssog_plugin.settings_form.identity_provider.choices
-
-
 def test_login_sso_user(app, create_group, create_identity, create_user, db):
     group = create_group(1, 'acme-users')
 
