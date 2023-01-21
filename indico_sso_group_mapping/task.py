@@ -8,7 +8,6 @@
 from celery.schedules import crontab
 
 from indico.core.celery import celery
-from indico.core.db import db
 from indico.util.date_time import now_utc
 
 
@@ -33,10 +32,8 @@ def scheduled_groupmembers_check():
                         or identity.identifier.endswith('@' + SSOGroupMappingPlugin.settings.get('identities_domain'))):
                     last_login_dt = identity.safe_last_login_dt
                     login_ago = now_utc() - last_login_dt
-                    SSOGroupMappingPlugin.logger.warning(f"User with identifier {identity.identifier} "
-                                                         f"has last logged in {login_ago.days} days ago")
                     if login_ago.days > SSOGroupMappingPlugin.settings.get('expire_login_days'):
                         SSOGroupMappingPlugin.logger.info(f"Removing user with identity {identity.identifier} "
-                                                          f"from local group {group}")
+                                                          f"from local group {group}, last login was "
+                                                          f"{login_ago.days} days ago")
                         group.members.remove(user)
-                        db.session.flush()
