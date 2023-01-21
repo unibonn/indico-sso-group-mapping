@@ -41,6 +41,14 @@ class SettingsForm(IndicoForm):
                                       InputRequired(), NumberRange(min=1)],
                                      description=_('Days after which logins are considered too old '
                                                    'and users are removed from group in cleanup.'))
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        identity_providers = multipass.identity_providers.values()
+        if not identity_providers:
+            del self.settings_form.identity_provider
+        idp_choices = [(p.name, p.title) for p in sorted(identity_providers, key=attrgetter('title'))]
+        self.identity_provider.choices = idp_choices
 
 
 class SSOGroupMappingPlugin(IndicoPlugin):
@@ -63,13 +71,6 @@ class SSOGroupMappingPlugin(IndicoPlugin):
     }
 
     def init(self):
-        # identity_providers = [p for p in multipass.identity_providers.values()]
-        identity_providers = multipass.identity_providers.values()
-        if not identity_providers:
-            del self.settings_form.identity_provider
-        idp_choices = [(p.name, p.title) for p in sorted(identity_providers, key=attrgetter('title'))]
-        self.settings_form.identity_provider.choices = idp_choices
-
         super().init()
         self.connect(signals.users.logged_in, self._user_logged_in)
 
