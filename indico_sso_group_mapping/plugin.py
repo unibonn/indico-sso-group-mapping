@@ -25,8 +25,8 @@ from indico_sso_group_mapping import _
 
 class SettingsForm(IndicoForm):
     identity_provider = SelectField(_('Provider'), [InputRequired()],
-                                    description=_('The identity provider accounts need to be '
-                                                  'associated with to be added to the group.'))
+                                    description=_('The identity provider to which accounts need '
+                                                  'to be associated to be added to the group.'))
     identities_domain = StringField(_('Identities Domain'),
                                     description=_('If non-empty, identities must match given domain.'))
     sso_group = QuerySelectField(_('Local Users Group'), [InputRequired()],
@@ -55,7 +55,8 @@ class SettingsForm(IndicoForm):
 class SSOGroupMappingPlugin(IndicoPlugin):
     """SSO Group Mapping
 
-    Provides SSO group mapping to local group for Indico
+    Provides mapping from SSO identity provider and optionally domain
+    local group in Indico.
     """
 
     configurable = True
