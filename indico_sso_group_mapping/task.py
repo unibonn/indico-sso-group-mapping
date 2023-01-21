@@ -36,4 +36,4 @@ def scheduled_groupmembers_check():
                         SSOGroupMappingPlugin.logger.info(f"Removing user with identity {identity.identifier} "
                                                           f"from local group {group}, last login was "
                                                           f"{login_ago.days} days ago")
-                        group.members.remove(user)
+                        group.members.discard(user)
