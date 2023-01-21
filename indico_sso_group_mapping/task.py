@@ -8,6 +8,7 @@
 from celery.schedules import crontab
 
 from indico.core.celery import celery
+from indico.core.db import db
 from indico.util.date_time import now_utc
 
 
@@ -25,6 +26,7 @@ def scheduled_groupmembers_check():
     if not group:
         SSOGroupMappingPlugin.logger.warning('Local Users Group not set, not cleaning up group')
         return
+    any_users_discarded = False
     for user in group.members.copy():
         for identity in user.identities:
             if identity.provider == identity_provider:
@@ -37,3 +39,6 @@ def scheduled_groupmembers_check():
                                                           f"from local group {group}, last login was "
                                                           f"{login_ago.days} days ago")
                         group.members.discard(user)
+                        any_users_discarded = True
+    if any_users_discarded:
+        db.session.commit()
