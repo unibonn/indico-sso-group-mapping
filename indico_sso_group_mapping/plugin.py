@@ -33,7 +33,7 @@ class SettingsForm(IndicoForm):
                                  query_factory=lambda: LocalGroup.query, get_label='name',
                                  description=_('The group to which anyone logging in '
                                                'with a matching SSO account is added.'))
-    enable_group_cleanup = BooleanField(_('Enable periodic Local Users Group cleanup'), widget=SwitchWidget(),
+    enable_group_cleanup = BooleanField(_('Enable daily Local Users Group cleanup'), widget=SwitchWidget(),
                                         description=_('Enable periodic cleanup of Local Users Group '
                                                       'for SSO accounts without login in configured days.'))
     expire_login_days = IntegerField(_('Expire login after days'),
