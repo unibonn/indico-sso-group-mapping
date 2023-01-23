@@ -64,7 +64,7 @@ def create_group(db):
     def _create_group(id_, group_name=None):
         group = LocalGroup()
         group.id = id_
-        group.name = f'dummy-{id_}' if group_name is None else group_name
+        group.name = group_name or f'dummy-{id_}'
         db.session.add(group)
         db.session.flush()
         return group.proxy
@@ -76,9 +76,7 @@ def create_group(db):
 def create_identity(db):
     """Return a callable which lets you create dummy identities."""
     def _create_identity(user, provider, identifier):
-        identity = Identity(user_id=user.id, provider=provider, identifier=identifier)
-        db.session.add(identity)
-        db.session.flush()
+        identity = Identity(user=user, provider=provider, identifier=identifier)
         return identity
 
     return _create_identity
