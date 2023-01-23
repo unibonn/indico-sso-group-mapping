@@ -77,6 +77,7 @@ def create_identity(db):
     """Return a callable which lets you create dummy identities."""
     def _create_identity(user, provider, identifier):
         identity = Identity(user=user, provider=provider, identifier=identifier)
+        db.session.flush()
         return identity
 
     return _create_identity
