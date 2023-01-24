@@ -58,31 +58,6 @@ def app(request, redis_proc):
     return make_app(testing=True, config_override=config_override)
 
 
-@pytest.fixture
-def create_group(db):
-    """Return a callable which lets you create dummy groups."""
-    def _create_group(id_, group_name=None):
-        group = LocalGroup()
-        group.id = id_
-        group.name = group_name or f'dummy-{id_}'
-        db.session.add(group)
-        db.session.flush()
-        return group.proxy
-
-    return _create_group
-
-
-@pytest.fixture
-def create_identity(db):
-    """Return a callable which lets you create dummy identities."""
-    def _create_identity(user, provider, identifier):
-        identity = Identity(user=user, provider=provider, identifier=identifier)
-        db.session.flush()
-        return identity
-
-    return _create_identity
-
-
 def test_create_sso_group_mapping_plugin(app):
     ssog_plugin = SSOGroupMappingPlugin(plugin_engine, app)
     assert ssog_plugin.configurable is True
