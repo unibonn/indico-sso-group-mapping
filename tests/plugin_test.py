@@ -12,8 +12,6 @@ import pytest
 
 from indico.core import signals
 from indico.core.plugins import plugin_engine
-from indico.modules.auth import Identity
-from indico.modules.groups.models.groups import LocalGroup
 from indico.util.date_time import now_utc
 from indico.web.flask.app import make_app
 
