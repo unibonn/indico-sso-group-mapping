@@ -51,12 +51,12 @@ jobs:
 
       - name: Cache pip
         id: cache-pip
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
           key: pip|${{ runner.os }}|3.9|${{ hashFiles('**/setup.cfg') }}
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         id: cache-npm
         with:
           path: node_modules
