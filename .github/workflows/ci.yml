@@ -20,7 +20,7 @@ jobs:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Get upstream branch name
         run: |
@@ -96,7 +96,7 @@ jobs:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Get upstream branch name
         run: |
@@ -167,7 +167,7 @@ jobs:
     #      - plugin: indico_sso_group_mapping
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v4
