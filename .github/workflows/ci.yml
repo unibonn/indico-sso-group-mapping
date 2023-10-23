@@ -136,6 +136,7 @@ jobs:
         if: success() || failure()
         run: |
           pipx install unbeheader
+          touch node_modules/.no-header
           echo '::add-matcher::.github/matchers/headers-problem-matcher.json'
           unbehead --check
           echo '::remove-matcher owner=headers::'
