@@ -1,5 +1,8 @@
 name: CI
 
+env:
+  PYTHON_VERSION: '3.11.5'
+
 on:
   push:
     branches:
@@ -14,7 +17,7 @@ on:
 
 jobs:
   setup:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         shell: bash
@@ -29,14 +32,14 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install system dependencies
         run: sudo apt-get install postgresql-client libpq-dev
 
       - name: Create virtualenv
         run: |
-          python3.9 -m venv .venv
+          python3.11 -m venv .venv
           source .venv/bin/activate
           pip install -U pip setuptools wheel
 
@@ -54,7 +57,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
-          key: pip|${{ runner.os }}|3.9|${{ hashFiles('**/setup.cfg') }}
+          key: pip|${{ runner.os }}|3.11|${{ hashFiles('**/setup.cfg') }}
 
       - uses: actions/cache@v3
         id: cache-npm
@@ -66,7 +69,7 @@ jobs:
         uses: actions/setup-node@v3
         if: steps.cache-npm.outputs.cache-hit != 'true'
         with:
-          node-version: '14.x'
+          node-version: '18.x'
 
       - name: Install Indico
         run: |
@@ -89,7 +92,7 @@ jobs:
 
   lint:
     needs: setup
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     defaults:
       run:
@@ -105,12 +108,12 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
+          node-version: '18.x'
 
       - name: Download environment
         uses: actions/download-artifact@v3
@@ -132,9 +135,9 @@ jobs:
       - name: Check headers
         if: success() || failure()
         run: |
-          wget "https://raw.githubusercontent.com/indico/indico/${INDICO_BRANCH}/bin/maintenance/update_header.py" -O /tmp/update_header.py
+          pipx install unbeheader
           echo '::add-matcher::.github/matchers/headers-problem-matcher.json'
-          python /tmp/update_header.py --ci
+          unbehead --check
           echo '::remove-matcher owner=headers::'
 
       - name: Run flake8
@@ -146,7 +149,7 @@ jobs:
 
   test-plugin:
     needs: setup
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     defaults:
       run:
@@ -172,12 +175,12 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
+          node-version: '18.x'
 
       - name: Download environment
         uses: actions/download-artifact@v3
