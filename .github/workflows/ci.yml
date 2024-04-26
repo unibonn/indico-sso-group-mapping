@@ -138,6 +138,7 @@ jobs:
       - name: Check headers
         if: success() || failure()
         run: |
+          touch node_modules/.no-header
           echo '::add-matcher::.github/matchers/headers-problem-matcher.json'
           unbehead --check
           echo '::remove-matcher owner=headers::'
