@@ -138,6 +138,7 @@ jobs:
       - name: Check headers
         if: success() || failure()
         run: |
+          touch .github/utils/.no-header
           touch node_modules/.no-header
           echo '::add-matcher::.github/matchers/headers-problem-matcher.json'
           unbehead --check
