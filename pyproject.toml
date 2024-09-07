@@ -4,7 +4,7 @@
 name = 'indico-sso-group-mapping'
 description = 'SSO group mapping plugin for Indico'
 readme = 'README.md'
-version = '1.0.2'
+version = '1.0.3'
 license = 'MIT'
 authors = [{ name = 'University of Bonn' }]
 classifiers = [
