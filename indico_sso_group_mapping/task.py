@@ -35,9 +35,9 @@ def scheduled_groupmembers_check():
                     last_login_dt = identity.safe_last_login_dt
                     login_ago = now_utc() - last_login_dt
                     if login_ago.days > SSOGroupMappingPlugin.settings.get('expire_login_days'):
-                        SSOGroupMappingPlugin.logger.info(f"Removing user with identity {identity.identifier} "
-                                                          f"from local group {group}, last login was "
-                                                          f"{login_ago.days} days ago")
+                        SSOGroupMappingPlugin.logger.info('Removing user with identity %s '
+                                                          'from local group %s, last login was '
+                                                          '%d days ago', identity.identifier, group, login_ago.days)
                         group.members.discard(user)
                         any_users_discarded = True
     if any_users_discarded:
