@@ -90,5 +90,5 @@ class SSOGroupMappingPlugin(IndicoPlugin):
             if (not self.settings.get('identities_domain')
                     or identity.identifier.endswith('@' + self.settings.get('identities_domain'))):
                 if user not in group.members:
-                    self.logger.info(f"Adding user with identity {identity.identifier} to local group {group}")
+                    self.logger.info('Adding user with identity %s to local group %s', identity.identifier, group)
                     group.members.add(user)
