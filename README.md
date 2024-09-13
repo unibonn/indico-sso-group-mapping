@@ -7,14 +7,17 @@ You can install the plugin directly from PyPI:
 ```
 pip install indico-sso-group-mapping
 ```
-
+After installation, activate the plugin via adding it to the `PLUGINS` variable in `indico.conf`:
+```
+PLUGINS = {'sso_group_mapping'}
+```
 ## Functionality
 This plugin adds users logging in via a given identity provider, configurably filtered by the domain of the identity, to a configurable local group. The goal is to grant privileges (such as room booking) to all users using a given identity provider and, optionally, identity domain. An example use case would be Shibboleth SSO via federated identities, only granting those users with a given identity domain local privileges.
 
 Furthermore, this plugin features a celery cron job which can optionally clean out users from the local group after they have not used the configured identity provider and identity domain for a configured number of days. This covers changes in a user's affiliation.
 
 ## Settings
-After installation, the plugin (named `SSO Group Mapping`) offers various settings in the Admin backend.
+After installation, the plugin (named `SSO Group Mapping`) offers various settings in the Admin backend in the `Plugins` category of the sidebar.
 
 ### Provider
 The identity provider to which accounts need to be associated to be added to the group.
