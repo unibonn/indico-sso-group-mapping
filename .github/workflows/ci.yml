@@ -115,7 +115,7 @@ jobs:
           node-version: '18.x'
 
       - name: Download environment
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: environment
           path: /tmp
@@ -182,7 +182,7 @@ jobs:
           node-version: '18.x'
 
       - name: Download environment
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: environment
           path: /tmp
