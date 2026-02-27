@@ -108,7 +108,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Download environment
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: environment
           path: /tmp
@@ -178,7 +178,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Download environment
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: environment
           path: /tmp
