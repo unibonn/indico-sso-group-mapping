@@ -7,7 +7,8 @@ preview = true
 dummy-variable-rgx = '^(_{2,}|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$' # a single `_` is already used for i18n
 
 select = [
-    'E',      # pycodestyle
+    'E',      # pycodestyle (errors)
+    'W',      # pycodestyle (warnings)
     'F',      # pyflakes
     'N',      # pep8-naming
     'Q',      # flake8-quotes
@@ -40,7 +41,7 @@ select = [
 ]
 ignore = [
     # plugin-specific excludes:
-    'D', # too noisy for now
+    'D400', # too noisy for now
     # anything below should match the indico core ruff.toml
     'E226',    # allow omitting whitespace around arithmetic operators
     'E731',    # allow assigning lambdas (it's useful for single-line functions defined inside other functions)
@@ -49,7 +50,8 @@ ignore = [
     'RUF015',  # not always more readable, and we don't do it for huge lists
     'RUF022',  # autofix messes up our formatting instead of just sorting
     'RUF027',  # also triggers on i18n functions -> too noisy for now
-    'UP038',   # it looks kind of weird and it slower than a tuple
+    'RUF052',  # we often use underscore-prefixed variables in tests and to cache regexps in function definitions
+    'RUF067',  # we often have code in __init__.py
     'D205',    # too many docstrings which have no summary line
     'D301',    # https://github.com/astral-sh/ruff/issues/8696
     'D1',      # we have way too many missing docstrings :(
@@ -64,12 +66,11 @@ ignore = [
     'S405',    # we don't use lxml in unsafe ways
     'S603',    # useless, triggers on *all* subprocess calls: https://github.com/astral-sh/ruff/issues/4045
     'S607',    # we trust the PATH to be sane
+    'S704',    # somewhat noisy and many FPs: see https://github.com/astral-sh/ruff/issues/14523
     'B011',    # we don't run python with `-O` (also see S101)
     'B904',    # possibly useful but too noisy
     'COM812',  # trailing commas on multiline lists are nice, but we have 2.5k violations
     'PIE807',  # `lambda: []` is much clearer for `load_default` in schemas
-    'PT004',   # pretty weird + not a pytest convention: https://github.com/astral-sh/ruff/issues/8796
-    'PT005',   # ^ likewise
     'PT011',   # very noisy
     'PT015',   # nice for tests but not so nice elsewhere
     'PT018',   # ^ likewise
@@ -99,6 +100,7 @@ ignore = [
     'PERF203', # noisy, false positives, and not applicable for 3.11+
     'FURB113', # less readable
     'FURB140', # less readable and actually slower in 3.12+
+    'FURB189', # we pass those objects to code that may expect the real thing
 ]
 
 extend-safe-fixes = [
@@ -167,3 +169,5 @@ parenthesize-tuple-in-subscript = true
 '*/*_test.py' = ['E221', 'E241', 'E272', 'N802', 'S105', 'S106', 'PLC1901']
 # allow long lines in migrations (only do that for raw SQL please)
 '*/migrations/*.py' = ['E501', 'D400']
+# piwik plugin uses too much camelcase :(
+'piwik/indico_piwik/queries/graphs.py' = ['N803']
