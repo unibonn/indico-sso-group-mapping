@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 
 [project]
-name = 'indico-sso-group-mapping'
+name = 'indico-plugin-sso-group-mapping'
 description = 'SSO group mapping plugin for Indico'
 readme = 'README.md'
 version = '1.0.3'
@@ -17,13 +17,13 @@ requires-python = '>=3.12.2, <3.13'
 dependencies = ['indico>=3.3']
 
 [project.urls]
-GitHub = 'https://github.com/unibonn/indico-sso-group-mapping'
+GitHub = 'https://github.com/unibonn/indico-plugin-sso-group-mapping'
 
 [project.entry-points.'indico.plugins']
 sso_group_mapping = 'indico_sso_group_mapping.plugin:SSOGroupMappingPlugin'
 
 [build-system]
-requires = ['hatchling==1.25.0']
+requires = ['hatchling==1.28.0']
 build-backend = 'hatchling.build'
 
 [tool.hatch.build]
