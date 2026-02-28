@@ -2,7 +2,7 @@
   "name": "plugins",
   "private": true,
   "version": "1.0.0",
-  "repository": "https://github.com/unibonn/indico-sso-group-mapping",
+  "repository": "https://github.com/unibonn/indico-plugin-sso-group-mapping",
   "author": "University of Bonn",
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.2",

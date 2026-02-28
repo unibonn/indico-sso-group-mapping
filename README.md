@@ -5,7 +5,7 @@ An [Indico](https://getindico.io/) plugin to map SSO groups to local Indico grou
 ## Installation
 You can install the plugin directly from PyPI:
 ```
-pip install indico-sso-group-mapping
+pip install indico-plugin-sso-group-mapping
 ```
 After installation, activate the plugin via adding it to the `PLUGINS` variable in `indico.conf`:
 ```
@@ -36,9 +36,9 @@ Days after which logins are considered too old and users are removed from group 
 
 (only shown if daily cleanup is enabled)
 
-[ci-badge]: https://github.com/unibonn/indico-sso-group-mapping/actions/workflows/ci.yml/badge.svg
-[ci-link]: https://github.com/unibonn/indico-sso-group-mapping/actions/workflows/ci.yml
+[ci-badge]: https://github.com/unibonn/indico-plugin-sso-group-mapping/actions/workflows/ci.yml/badge.svg
+[ci-link]: https://github.com/unibonn/indico-plugin-sso-group-mapping/actions/workflows/ci.yml
 [license-link]: https://github.com/indico/indico-plugins/blob/master/LICENSE
 [license-badge]: https://img.shields.io/github/license/indico/indico.svg
-[pypi-badge]: https://img.shields.io/pypi/v/indico-sso-group-mapping.svg
-[pypi-link]: https://pypi.org/project/indico-sso-group-mapping/
+[pypi-badge]: https://img.shields.io/pypi/v/indico-plugin-sso-group-mapping.svg
+[pypi-link]: https://pypi.org/project/indico-plugin-sso-group-mapping/
